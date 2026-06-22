@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salon Loop｜サロンのお客様をループさせる仕組み</title>
+<meta name="description" content="廃業を経験し、2件のM&A（事業譲渡）を成功させた代表が届ける、サロンのためのオールインワン経営システム。本格リリース前モニター価格79,200円（税込・先着20サロン）。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Salon Loop｜サロンのお客様をループさせる仕組み">
+<meta property="og:locale" content="ja_JP">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFFFF;
+    --bg2:#FBF8FD;          /* ほんのり紫みの白 */
+    --bg3:#F6F1FA;
+    --ink:#241F2B;
+    --ink-soft:#6B6478;
+    --muted:#9A93A6;
+    --line:#ECE5F2;
+    --line2:#E3DBEC;
+    /* Instagram グラデーション */
+    --ig:linear-gradient(120deg,#feda75 0%,#fa7e1e 22%,#d62976 52%,#962fbf 76%,#4f5bd5 100%);
+    --ig-soft:linear-gradient(120deg,#fde7c9,#f7d2da 45%,#e7d2f0 75%,#d9def5);
+    --ig-pink:#d62976;
+    --ig-purple:#962fbf;
+    --ig-blue:#4f5bd5;
+    --sans:'Noto Sans JP',sans-serif;
+    --pop:'Poppins',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);font-weight:400;background:var(--bg);color:var(--ink);line-height:1.95;letter-spacing:.02em;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  img{max-width:100%;display:block}
+  a{color:inherit;text-decoration:none}
+  .wrap{width:100%;max-width:1060px;margin:0 auto;padding:0 24px}
+  .narrow{max-width:720px}
+
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  .gt{background:var(--ig);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .label{font-family:var(--pop);font-weight:600;font-size:12px;letter-spacing:.22em;text-transform:uppercase;display:inline-block}
+
+  /* buttons */
+  .btn-ig{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--ig);color:#fff;font-weight:700;font-size:15px;letter-spacing:.04em;padding:18px 40px;border-radius:50px;box-shadow:0 12px 30px rgba(150,47,191,.28);transition:transform .2s,box-shadow .2s}
+  .btn-ig:hover{transform:translateY(-2px);box-shadow:0 16px 38px rgba(150,47,191,.36)}
+  .btn-line{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#fff;color:var(--ink);font-weight:600;font-size:14px;padding:17px 34px;border-radius:50px;border:1.5px solid var(--line2);transition:border-color .2s,color .2s}
+  .btn-line:hover{border-color:var(--ig-purple);color:var(--ig-purple)}
+
+  /* ===== header ===== */
+  header.hd{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .35s,box-shadow .35s}
+  header.hd.scrolled{background:rgba(255,255,255,.9);backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--line)}
+  .hd-inner{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .brand{font-family:var(--pop);font-weight:600;font-size:22px;letter-spacing:.02em;display:flex;align-items:center;gap:9px}
+  .brand .dot{width:26px;height:26px;border-radius:9px;background:var(--ig);display:inline-block}
+  .brand small{font-family:var(--sans);font-weight:400;font-size:10px;letter-spacing:.12em;color:var(--muted)}
+  .hd-cta{font-weight:700;font-size:13px;letter-spacing:.04em;padding:11px 24px;border-radius:50px;background:var(--ig);color:#fff;box-shadow:0 8px 20px rgba(150,47,191,.25)}
+
+  /* ===== hero ===== */
+  .hero{position:relative;min-height:100vh;display:flex;align-items:center;text-align:center;background:var(--bg);overflow:hidden}
+  .hero::before{content:"";position:absolute;width:760px;height:760px;border-radius:50%;top:-340px;right:-200px;background:var(--ig);opacity:.12;filter:blur(20px)}
+  .hero::after{content:"";position:absolute;width:520px;height:520px;border-radius:50%;bottom:-260px;left:-160px;background:var(--ig);opacity:.10;filter:blur(20px)}
+  .hero-inner{position:relative;z-index:2;width:100%;padding:120px 0 90px}
+  .hero .ey{font-family:var(--pop);font-weight:500;font-style:italic;font-size:16px;letter-spacing:.06em;margin-bottom:26px;display:inline-block}
+  .hero h1{font-weight:900;font-size:clamp(26px,4.6vw,44px);line-height:1.55;letter-spacing:.01em;white-space:nowrap}
+  .hero .lead{margin-top:30px;font-size:clamp(13px,1.9vw,16px);line-height:2.2;color:var(--ink-soft)}
+  .choices{margin:46px auto 0;display:inline-flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:center;background:var(--bg2);border:1px solid var(--line);border-radius:50px;padding:14px 28px}
+  .choices .c{font-weight:500;font-size:clamp(14px,2.2vw,16px);color:var(--muted);position:relative}
+  .choices .c.strike{text-decoration:line-through;text-decoration-color:#c9c1d4}
+  .choices .sep{color:var(--line2)}
+  .choices .c.third{font-weight:700}
+  .hero-cta{margin-top:46px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+  .scroll-cue{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:3;font-family:var(--pop);font-size:10px;letter-spacing:.3em;color:var(--muted)}
+  .hero-grid{display:grid;grid-template-columns:1.04fr .96fr;gap:30px;align-items:center;text-align:left}
+  .hero-grid .ey,.hero-grid h1,.hero-grid .lead{text-align:left}
+  .hero-grid .choices{margin-left:0;margin-right:0}
+  .hero-grid .hero-cta{justify-content:flex-start}
+  .hero-fig{position:relative;display:flex;justify-content:center;align-items:flex-end;min-height:560px}
+  .hero-fig img{max-height:600px;width:auto;position:relative;z-index:2;filter:drop-shadow(0 20px 34px rgba(80,50,120,.14))}
+  .hero-ring{position:absolute;top:46%;left:50%;transform:translate(-50%,-50%);width:430px;height:430px;z-index:1}
+
+  /* ===== section base ===== */
+  section{padding:108px 0}
+  .sec-head{text-align:center;margin-bottom:56px}
+  .sec-head .label{margin-bottom:18px}
+  .sec-ttl{font-weight:900;font-size:clamp(23px,3.8vw,34px);line-height:1.55;letter-spacing:.02em}
+  .sec-lead{margin-top:22px;font-size:14px;line-height:2.2;color:var(--ink-soft);max-width:640px;margin-left:auto;margin-right:auto}
+
+  /* ===== story ===== */
+  .story{background:var(--bg2)}
+  .story-grid{display:grid;grid-template-columns:1fr 0.88fr;gap:60px;align-items:center}
+  .story-figure{position:relative}
+  .story-figure img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:24px;position:relative;z-index:1}
+  .story-figure::before{content:"";position:absolute;inset:-12px -12px auto auto;width:70%;height:70%;background:var(--ig);opacity:.16;border-radius:28px;z-index:0}
+  .story-figure figcaption{margin-top:16px;font-family:var(--pop);font-style:italic;font-size:13px;letter-spacing:.04em;color:var(--muted);text-align:center}
+  .story-body .label{margin-bottom:18px}
+  .story-body h2{font-weight:900;font-size:clamp(22px,3.2vw,29px);line-height:1.6;margin-bottom:26px;letter-spacing:.02em}
+  .story-body p{font-size:14.5px;line-height:2.25;color:var(--ink);margin-bottom:22px}
+  .story-body p:last-child{margin-bottom:0}
+  .story-body strong{font-weight:700}
+  .story-body strong.g{background:var(--ig);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat-row{display:flex;gap:40px;margin:34px 0;padding:28px 0;border-top:1px solid var(--line2);border-bottom:1px solid var(--line2)}
+  .stat .num{font-family:var(--pop);font-weight:600;font-size:50px;line-height:1}
+  .stat .lb{font-size:12px;color:var(--ink-soft);margin-top:6px}
+
+  /* ===== quote ===== */
+  .quote{background:var(--bg);text-align:center;position:relative}
+  .quote .wrap{position:relative;z-index:2}
+  .quote h2{font-weight:900;font-size:clamp(20px,4.2vw,38px);line-height:1.6;letter-spacing:.01em;white-space:nowrap}
+  .quote .q-sub{margin-top:28px;font-size:14.5px;line-height:2.2;color:var(--ink-soft)}
+  .quote .q-sub strong{color:var(--ink);font-weight:700}
+
+  /* ===== problem ===== */
+  .prob{background:var(--bg3)}
+  .prob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .pcard{background:#fff;border-radius:22px;padding:38px 28px;text-align:center;box-shadow:0 10px 34px rgba(80,50,120,.06)}
+  .pcard .pn{font-family:var(--pop);font-weight:600;font-size:30px;margin-bottom:14px}
+  .pcard h3{font-weight:700;font-size:17px;margin-bottom:12px}
+  .pcard p{font-size:13px;line-height:2;color:var(--ink-soft)}
+
+  /* ===== bridge ===== */
+  .bridge{background:var(--bg)}
+  .bridge-flow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+  .bnode{background:var(--bg2);border:1px solid var(--line);border-radius:22px;padding:40px 28px;text-align:center}
+  .bnode .step{font-family:var(--pop);font-weight:600;font-size:13px;letter-spacing:.18em;margin-bottom:16px}
+  .bnode h3{font-weight:700;font-size:18px;margin-bottom:12px}
+  .bnode p{font-size:12.5px;line-height:2;color:var(--ink-soft)}
+  .bnode.fin{background:var(--ig);border:none;color:#fff;box-shadow:0 16px 40px rgba(150,47,191,.3)}
+  .bnode.fin .step,.bnode.fin p{color:#fff;opacity:.95}
+
+  /* ===== features (showcase) ===== */
+  .feat{background:var(--bg2)}
+  .showcase{display:flex;flex-direction:column;gap:72px;max-width:1000px;margin:0 auto}
+  .sc-row{display:grid;grid-template-columns:0.92fr 1.08fr;gap:56px;align-items:center}
+  .sc-row:nth-child(even) .sc-visual{order:2}
+  .sc-text .idx{font-family:var(--pop);font-weight:600;font-size:40px;line-height:1;margin-bottom:14px}
+  .sc-text h3{font-weight:700;font-size:21px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .sc-text .tag{font-family:var(--sans);font-weight:600;font-size:11px;letter-spacing:.08em;color:#fff;background:var(--ig);border-radius:50px;padding:4px 13px}
+  .sc-text p{font-size:14px;line-height:2.25;color:var(--ink-soft)}
+  .feat-note{text-align:center;margin-top:54px;font-size:12.5px;color:var(--muted)}
+
+  /* device mock */
+  .mock{max-width:330px;margin:0 auto;background:#fff;border-radius:26px;box-shadow:0 24px 60px rgba(80,50,120,.16);border:1px solid var(--line);overflow:hidden}
+  .sc-row:nth-child(even) .mock{margin:0 auto}
+  .mk-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--ig);color:#fff}
+  .mk-title{font-weight:700;font-size:13px;letter-spacing:.04em}
+  .mk-live{font-size:9.5px;font-weight:600;background:rgba(255,255,255,.22);border-radius:50px;padding:3px 10px;display:inline-flex;align-items:center;gap:5px}
+  .mk-live::before{content:"";width:6px;height:6px;border-radius:50%;background:#fff;box-shadow:0 0 0 0 rgba(255,255,255,.6);animation:pulse 1.8s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.6)}70%{box-shadow:0 0 0 6px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+  .mk-body{padding:14px}
+  .mk-search{background:var(--bg3);border-radius:10px;padding:9px 12px;font-size:11px;color:var(--muted);margin-bottom:12px}
+  /* customer list */
+  .mk-cust{display:flex;align-items:center;gap:11px;padding:10px 6px;border-bottom:1px solid var(--line)}
+  .mk-cust:last-child{border-bottom:none}
+  .mk-av{width:34px;height:34px;border-radius:50%;background:var(--ig-soft);flex:0 0 34px}
+  .mk-ci{flex:1;min-width:0}
+  .mk-ci b{font-size:12.5px;display:block;line-height:1.4}
+  .mk-ci small{font-size:10px;color:var(--muted)}
+  .mk-st{font-size:9.5px;font-weight:600;border-radius:50px;padding:4px 9px;white-space:nowrap}
+  .st-sent{background:#eafaf0;color:#1f9d57}
+  .st-book{background:#eef0ff;color:#4f5bd5}
+  .st-todo{background:#fdeef4;color:#d62976}
+  /* karte */
+  .mk-karte-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .mk-karte-head .mk-av{width:46px;height:46px;flex-basis:46px}
+  .mk-karte-head b{font-size:14px}
+  .mk-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px}
+  .mk-tags span{font-size:9.5px;background:var(--bg3);color:var(--ink-soft);border-radius:50px;padding:3px 9px}
+  .mk-hist{margin-top:6px;border-left:2px solid var(--line2);padding-left:14px}
+  .mk-hi{position:relative;padding:8px 0;font-size:11px;color:var(--ink-soft)}
+  .mk-hi::before{content:"";position:absolute;left:-19px;top:13px;width:8px;height:8px;border-radius:50%;background:var(--ig-purple)}
+  .mk-hi b{color:var(--ink);font-size:11.5px}
+  .mk-memo{margin-top:10px;background:var(--bg2);border-radius:10px;padding:10px 12px;font-size:10.5px;color:var(--ink-soft);line-height:1.7}
+  /* posting + dashboard */
+  .mk-plats{display:flex;gap:7px;margin-bottom:11px;flex-wrap:wrap}
+  .mk-plat{font-size:9.5px;font-weight:600;border-radius:9px;padding:6px 10px;border:1.5px solid var(--line2);color:var(--muted)}
+  .mk-plat.on{background:var(--ig);color:#fff;border-color:transparent}
+  .mk-compose{background:var(--bg2);border-radius:10px;padding:11px;font-size:11px;color:var(--ink-soft);line-height:1.7;min-height:54px}
+  .mk-compose b{color:var(--ink)}
+  .mk-postact{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+  .mk-postact .imgs{display:flex;gap:5px}
+  .mk-postact .imgs i{width:22px;height:22px;border-radius:6px;background:var(--ig-soft);display:inline-block}
+  .mk-postbtn{font-size:10.5px;font-weight:700;color:#fff;background:var(--ig);border-radius:50px;padding:7px 16px}
+  .mk-divider{height:1px;background:var(--line);margin:13px 0}
+  .mk-kpis{display:flex;gap:8px;margin-bottom:12px}
+  .mk-kpi{flex:1;background:var(--bg2);border-radius:10px;padding:9px 8px;text-align:center}
+  .mk-kpi b{font-family:var(--pop);font-weight:600;font-size:14px;display:block;line-height:1.2}
+  .mk-kpi small{font-size:8.5px;color:var(--muted)}
+  .mk-bars{display:flex;align-items:flex-end;gap:6px;height:64px;padding:4px 2px 0}
+  .mk-bars i{flex:1;border-radius:5px 5px 0 0;background:var(--ig);opacity:.85}
+  .mk-axis{display:flex;justify-content:space-between;font-size:8px;color:var(--muted);margin-top:5px}
+  /* dashboard rich parts */
+  .mk-sec{font-size:9.5px;font-weight:700;color:var(--ink);margin:13px 2px 7px}
+  .mk-grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .mk-panel{background:var(--bg2);border-radius:10px;padding:10px}
+  .mk-panel .pt{font-size:8.5px;color:var(--muted);font-weight:600;margin-bottom:8px}
+  .mk-donut{width:62px;height:62px;border-radius:50%;margin:2px auto 0;background:conic-gradient(var(--ig-purple) 0 54%,var(--ig-blue) 54% 82%,#d8d1e0 82% 100%);position:relative}
+  .mk-donut::after{content:"";position:absolute;inset:17px;background:var(--bg2);border-radius:50%}
+  .mk-leg{display:flex;flex-direction:column;gap:4px;margin-top:9px}
+  .mk-leg span{font-size:8px;color:var(--ink-soft);display:flex;align-items:center;gap:5px}
+  .mk-leg span::before{content:"";width:7px;height:7px;border-radius:2px;background:var(--c,#ccc)}
+  .mk-hbar{display:flex;align-items:center;gap:6px;margin-bottom:7px}
+  .mk-hbar small{font-size:8px;color:var(--ink-soft);width:22px;flex:0 0 22px}
+  .mk-hbar .t{flex:1;height:8px;border-radius:50px;background:#e8e1f0;overflow:hidden}
+  .mk-hbar .t i{display:block;height:100%;border-radius:50px;background:var(--ig)}
+  .mk-rank{margin-top:2px}
+  .mk-rk{display:flex;align-items:center;gap:9px;padding:6px 0;border-bottom:1px solid var(--line)}
+  .mk-rk:last-child{border-bottom:none}
+  .mk-rk .no{font-family:var(--pop);font-weight:600;font-size:11px;color:var(--ig-purple);width:14px}
+  .mk-rk .nm{flex:1;font-size:10px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mk-rk .vl{font-size:10px;font-weight:700;color:var(--ink-soft)}
+
+  /* ===== price ===== */
+  .price{background:var(--bg)}
+  .price-card{max-width:560px;margin:0 auto;background:#fff;border-radius:30px;padding:8px;background-image:var(--ig);box-shadow:0 24px 60px rgba(150,47,191,.18)}
+  .price-inner{background:#fff;border-radius:24px;padding:clamp(34px,5vw,52px);text-align:center}
+  .price-inner .cap{font-family:var(--pop);font-weight:600;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--ig-purple)}
+  .limit-badge{display:inline-block;font-family:var(--sans);margin:6px 0 16px;font-size:12.5px;font-weight:700;color:#fff;background:var(--ig);border-radius:50px;padding:7px 18px;letter-spacing:.04em;box-shadow:0 6px 16px rgba(150,47,191,.22)}
+  .price-regular{font-size:15px;color:var(--muted);text-decoration:line-through;text-decoration-color:var(--ig-pink);font-weight:500;margin-bottom:2px}
+  .price-amount{margin:18px 0 4px;font-family:var(--pop);font-weight:600;line-height:1}
+  .price-amount .s{font-size:30px;vertical-align:top}
+  .price-amount .n{font-size:clamp(56px,13vw,84px);letter-spacing:.01em}
+  .price-tax{font-size:14px;color:var(--ink-soft);font-weight:500}
+  .price-note{margin-top:8px;font-size:12.5px;color:var(--muted)}
+  .price-incl{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:26px 0 6px}
+  .price-incl span{font-size:11.5px;color:var(--ink-soft);background:var(--bg3);border-radius:50px;padding:6px 14px}
+  .price-cta{margin-top:30px;display:flex;flex-direction:column;gap:12px;align-items:center}
+  .price-cta .btn-ig{width:100%;max-width:360px;font-size:16px;padding:20px}
+  .price-cta .btn-line{width:100%;max-width:360px}
+  .price-cta .sub{font-size:11px;color:var(--muted);margin-top:2px}
+  .price-plus{max-width:540px;margin:30px auto 0;font-size:11.5px;line-height:2;color:var(--muted);text-align:center}
+  .price-plus strong{color:var(--ink-soft);font-weight:600}
+  /* addon: 広告収益モデル */
+  .addon{max-width:980px;margin:72px auto 0;display:grid;grid-template-columns:1.05fr .95fr;gap:50px;align-items:center}
+  .addon .label{margin-bottom:16px}
+  .addon h3{font-weight:900;font-size:clamp(19px,2.6vw,24px);line-height:1.6;letter-spacing:.02em;margin-bottom:18px}
+  .addon p{font-size:13.5px;line-height:2.15;color:var(--ink-soft);margin-bottom:14px}
+  .addon p strong{color:var(--ink);font-weight:700}
+  .addon .tags{display:flex;flex-wrap:wrap;gap:7px;margin:4px 0 16px}
+  .addon .tags span{font-size:11px;color:var(--ig-purple);background:var(--bg3);border-radius:50px;padding:5px 13px}
+  .addon .cond{font-size:11.5px;line-height:1.95;color:var(--muted);background:var(--bg2);border-left:3px solid var(--ig-purple);border-radius:0 10px 10px 0;padding:12px 16px}
+  /* email mock */
+  .mailmock{max-width:330px;margin:0 auto;background:#fff;border-radius:22px;box-shadow:0 24px 60px rgba(80,50,120,.16);border:1px solid var(--line);overflow:hidden}
+  .mm-bar{background:var(--ig);color:#fff;padding:13px 18px;font-weight:700;font-size:13px;display:flex;align-items:center;gap:8px}
+  .mm-head{padding:14px 16px 12px;border-bottom:1px solid var(--line)}
+  .mm-from{font-size:10px;color:var(--muted)}
+  .mm-subj{font-weight:700;font-size:13px;color:var(--ink);margin-top:3px}
+  .mm-body{padding:14px 16px;font-size:11.5px;line-height:2;color:var(--ink-soft)}
+  .mm-cta{display:inline-block;margin-top:10px;font-size:10.5px;font-weight:700;color:#fff;background:var(--ig);border-radius:50px;padding:8px 18px}
+  .mm-pr{margin:4px 16px 18px;border:1px solid var(--line2);border-radius:12px;padding:12px 12px 11px;background:var(--bg2);position:relative}
+  .mm-pr .prtag{position:absolute;top:-9px;left:14px;background:var(--ig);color:#fff;font-size:9px;font-weight:700;letter-spacing:.14em;padding:3px 9px;border-radius:4px}
+  .mm-prin{display:flex;align-items:center;gap:11px}
+  .mm-prthumb{width:46px;height:46px;border-radius:9px;background:var(--ig-soft);flex:0 0 46px;display:flex;align-items:center;justify-content:center}
+  .mm-prtx b{font-size:11.5px;color:var(--ink);display:block;line-height:1.4}
+  .mm-prtx small{font-size:9.5px;color:var(--muted)}
+
+  /* ===== cta ===== */
+  .cta{background:var(--bg3);text-align:center}
+  .cta h2{font-weight:900;font-size:clamp(23px,3.6vw,32px);line-height:1.6;letter-spacing:.02em}
+  .cta>.wrap>p{margin-top:26px;font-size:14px;line-height:2.3;color:var(--ink-soft)}
+  .cta>.wrap>p strong{font-weight:700;color:var(--ink)}
+  .cta-opts{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:720px;margin:48px auto 0}
+  .copt{background:#fff;border-radius:22px;padding:34px 30px;text-align:center;box-shadow:0 10px 30px rgba(80,50,120,.06);display:flex;flex-direction:column}
+  .copt.copt-buy{box-shadow:0 16px 40px rgba(150,47,191,.16);border:1.5px solid #efd9f3}
+  .copt .ci{font-family:var(--pop);font-weight:600;font-size:13px;letter-spacing:.18em;margin-bottom:14px}
+  .copt h3{font-weight:700;font-size:17px;margin-bottom:12px}
+  .copt p{font-size:12.5px;line-height:2;color:var(--ink-soft)}
+  .copt-list{text-align:left;display:inline-block;margin:2px auto 20px;font-size:13px;color:var(--ink);line-height:1.8}
+  .copt-list li{list-style:none;position:relative;padding-left:22px;margin-bottom:8px}
+  .copt-list li::before{content:"✓";position:absolute;left:0;color:var(--ig-purple);font-weight:700}
+  .copt-price{font-size:12px;color:var(--muted);margin-top:2px}
+  .copt-price b{font-family:var(--pop);font-weight:600;font-size:19px;color:var(--ink);margin-right:4px}
+  .copt-btn{margin-top:auto;display:inline-block;width:100%;padding:15px;border-radius:50px;font-weight:700;font-size:13.5px;letter-spacing:.02em;border:1.5px solid var(--line2);color:var(--ink);background:#fff;transition:border-color .2s,color .2s}
+  .copt-btn:hover{border-color:var(--ig-purple);color:var(--ig-purple)}
+  .copt-btn.buy{background:var(--ig);color:#fff;border:none;box-shadow:0 10px 24px rgba(150,47,191,.28)}
+  .copt-btn.buy:hover{color:#fff;transform:translateY(-2px)}
+
+  /* ===== faq ===== */
+  .faq{background:var(--bg)}
+  .faq-list{max-width:760px;margin:0 auto}
+  .faq-item{border-bottom:1px solid var(--line2)}
+  .faq-item:first-child{border-top:1px solid var(--line2)}
+  .faq-q{padding:26px 6px;font-weight:700;font-size:15px;color:var(--ink);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:18px;list-style:none}
+  .faq-q::-webkit-details-marker{display:none}
+  .faq-q .pm{font-family:var(--pop);font-size:22px;font-weight:500;transition:transform .3s;flex-shrink:0}
+  details[open] .faq-q .pm{transform:rotate(45deg)}
+  .faq-a{padding:0 6px 26px;font-size:13.5px;line-height:2.2;color:var(--ink-soft)}
+
+  /* ===== footer ===== */
+  footer{background:#1B1822;color:#EDE8F2;text-align:center;padding:74px 24px 56px}
+  footer .fb{font-family:var(--pop);font-weight:600;font-size:26px;letter-spacing:.02em;margin-bottom:8px}
+  footer .fconcept{font-size:11px;letter-spacing:.14em;margin-bottom:32px}
+  footer .fi{font-size:11.5px;line-height:2.3;color:#9A93A6}
+  footer .cp{font-family:var(--pop);font-size:11px;letter-spacing:.1em;color:#5E5868;margin-top:30px}
+
+  /* ===== illustrations ===== */
+  .hero-art{max-width:200px;margin:40px auto 4px}
+  .pcard .pic{width:92px;height:92px;margin:0 auto 14px}
+  .bnode .bic{width:62px;height:62px;margin:0 auto 14px}
+  .bnode.fin .bic{filter:none}
+  .copt .cpic{width:78px;height:78px;margin:0 auto 12px}
+  /* staff figures */
+  .feat-intro{display:flex;align-items:center;justify-content:center;gap:34px;max-width:820px;margin:0 auto 58px}
+  .feat-intro .staff-point{width:188px;flex:0 0 188px}
+  .feat-intro .sec-head{margin-bottom:0;text-align:left}
+  .ai-badge{display:inline-block;margin:14px 0 4px;font-size:12px;font-weight:700;color:#fff;background:var(--ig);border-radius:50px;padding:7px 17px;letter-spacing:.04em;box-shadow:0 6px 16px rgba(150,47,191,.22)}
+  .quote-figs{display:flex;justify-content:center;align-items:flex-end;gap:42px;margin-top:46px}
+  .quote-figs figure{margin:0;text-align:center}
+  .quote-figs img{width:150px}
+  .quote-figs figcaption{margin-top:10px;font-size:12.5px;font-weight:700}
+  .quote-figs .cx{color:var(--muted)}
+  .quote-figs .co{background:var(--ig);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .cta-fig{width:150px;margin:0 auto 6px}
+
+  /* ===== sticky mobile cta ===== */
+  .sticky{display:none}
+
+  @media(max-width:860px){
+    section{padding:78px 0}
+    .hero-grid{grid-template-columns:1fr;gap:8px;text-align:center}
+    .hero-grid .ey,.hero-grid h1,.hero-grid .lead{text-align:center}
+    .hero-grid .choices{margin-left:auto;margin-right:auto}
+    .hero-grid .hero-cta{justify-content:center}
+    .hero-fig{min-height:auto;margin-top:28px}
+    .hero-fig img{max-height:440px}
+    .hero-ring{width:330px;height:330px;top:42%}
+    .story-grid{grid-template-columns:1fr;gap:44px}
+    .story-figure{max-width:360px;margin:0 auto}
+    .feat-intro{flex-direction:column;gap:14px;margin-bottom:46px}
+    .feat-intro .staff-point{width:150px}
+    .feat-intro .sec-head{text-align:center}
+    .quote-figs{gap:20px}
+    .quote-figs img{width:118px}
+    .addon{grid-template-columns:1fr;gap:36px;margin-top:54px}
+    .addon .a-text{text-align:center}
+    .addon .tags{justify-content:center}
+    .addon .cond{text-align:left}
+    .showcase{gap:56px}
+    .sc-row{grid-template-columns:1fr;gap:30px}
+    .sc-row .sc-visual,.sc-row:nth-child(even) .sc-visual{order:-1}
+    .sc-text{text-align:center}
+    .sc-text h3{justify-content:center}
+    .prob-grid{grid-template-columns:1fr}
+    .bridge-flow{grid-template-columns:1fr}
+    .cta-opts{grid-template-columns:1fr}
+    .hd-cta{display:none}
+    .sticky{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:60;padding:10px 14px;gap:10px;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);box-shadow:0 -1px 0 var(--line)}
+    .sticky a{flex:1;text-align:center;padding:15px;border-radius:50px;font-weight:700;font-size:14px}
+    .sticky .buy{background:var(--ig);color:#fff}
+    .sticky .ask{background:#fff;border:1.5px solid var(--line2);color:var(--ink)}
+    body{padding-bottom:74px}
+    .scroll-cue{display:none}
+  }
+  @media(max-width:520px){
+    .choices{gap:10px;padding:12px 18px}
+    .f-row{grid-template-columns:1fr;gap:12px;padding:28px 26px}
+  }
+</style>
+</head>
+<body>
+
+<!-- 共通グラデーション定義（各イラストから url(#ig) で参照） -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="ig" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#feda75"/><stop offset=".25" stop-color="#fa7e1e"/><stop offset=".5" stop-color="#d62976"/><stop offset=".75" stop-color="#962fbf"/><stop offset="1" stop-color="#4f5bd5"/>
+  </linearGradient>
+</defs></svg>
+
+<!-- ===== header ===== -->
+<header class="hd" id="hd">
+  <div class="wrap hd-inner">
+    <a href="#top" class="brand"><span class="dot"></span>Salon&nbsp;Loop <small>サロンのお客様を、ループさせる</small></a>
+    <a href="#price" class="hd-cta">導入・説明会へ</a>
+  </div>
+</header>
+
+<!-- ===== hero ===== -->
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="ey gt reveal">A third choice for your salon</span>
+        <h1 class="reveal">サロンは、「続ける」か<br>「やめる」かの<span class="gt">二択じゃない。</span></h1>
+        <p class="lead reveal">廃業を経験し、2件のM&amp;Aを成功させた私が届ける、<br>サロンのお客様を&ldquo;ループ&rdquo;させ、&ldquo;売れる資産&rdquo;へ育てる経営システム。</p>
+        <div class="choices reveal">
+          <span class="c strike">やめる</span>
+          <span class="sep">/</span>
+          <span class="c strike">続ける</span>
+          <span class="sep">/</span>
+          <span class="c third gt">売る、という第3の道</span>
+        </div>
+        <div class="hero-cta reveal">
+          <a href="#price" data-buy class="btn-ig">Salon Loop を導入する（¥79,200 税込）</a>
+          <a href="#cta" data-cta class="btn-line">オンライン説明会に参加する</a>
+        </div>
+      </div>
+      <div class="hero-fig reveal">
+        <svg class="hero-ring" viewBox="0 0 430 430" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="215" cy="215" r="190" fill="none" stroke="url(#ig)" stroke-width="6" stroke-dasharray="2 22" stroke-linecap="round" opacity=".7"/>
+          <circle cx="215" cy="25" r="11" fill="url(#ig)"/>
+          <circle cx="405" cy="215" r="9" fill="#962fbf"/>
+          <circle cx="25" cy="215" r="9" fill="#d62976"/>
+          <circle cx="215" cy="405" r="9" fill="#fa7e1e"/>
+        </svg>
+        <img src="assets/images/staff-full.png" alt="サロンスタッフ">
+      </div>
+    </div>
+  </div>
+  <span class="scroll-cue">SCROLL</span>
+</section>
+
+<!-- ===== story ===== -->
+<section class="story" id="story">
+  <div class="wrap">
+    <div class="story-grid">
+      <figure class="story-figure reveal">
+        <img src="assets/images/owner.jpg" alt="サロンオーナー時代の代表">
+        <figcaption>― サロンオーナー時代の私 ―</figcaption>
+      </figure>
+      <div class="story-body reveal">
+        <span class="label gt">My Story</span>
+        <h2>私は、自分のサロンを<br>たたんでしまいました。</h2>
+        <p>経営が苦しくなったとき、私は「続ける」か「やめる」かの二択しか知らず、結局<strong class="g">廃業という選択をしてしまいました。</strong></p>
+        <p>後になって、サロンにも<strong class="g">M&amp;A — 第三者へ売るという道</strong>があったと知りました。あのとき知っていれば、スタッフもお客様も守れたかもしれない。その後悔が、私の原点です。</p>
+        <p>その悔しさをバネに、私はもう一度、事業づくりに挑みました。そして今度は——<strong class="g">立ち上げた2つの事業を、いずれもM&amp;A（事業譲渡）で売却することに成功しました。</strong></p>
+        <div class="stat-row">
+          <div class="stat"><div class="num gt">2</div><div class="lb">事業をM&amp;Aで<br>売却成功</div></div>
+          <div class="stat"><div class="num gt">3rd</div><div class="lb">「たたむ」以外の<br>第3の選択肢</div></div>
+        </div>
+        <p>廃業では&ldquo;失う&rdquo;だけだったものが、売却では&ldquo;次の誰か&rdquo;へ引き継がれていく。スタッフの居場所も、お客様との関係も、積み上げた価値も、終わらせずに残せました。<strong>「たたむ」と「売る」は、結末がまるで違う。</strong></p>
+        <p>サロンを失った悔しさと、2度の売却を成功させた経験。その<strong>両方</strong>を知るからこそ、私は確信を持ってお伝えできます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== quote ===== -->
+<section class="quote">
+  <div class="wrap narrow">
+    <h2 class="reveal">サロンは「続ける」か「やめる」か、<br>その<span class="gt">二択ではありません。</span></h2>
+    <div class="quote-figs reveal">
+      <figure>
+        <img src="assets/images/staff-x.png" alt="たたむ">
+        <figcaption class="cx">たたむ（廃業）</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/staff-o.png" alt="売る">
+        <figcaption class="co">売る（M&amp;A）という道</figcaption>
+      </figure>
+    </div>
+    <p class="q-sub reveal">ただし、ひとつだけ現実があります。<br><strong>オーナーが抜けたら回らないサロンは、売ろうにも売れません。</strong></p>
+  </div>
+</section>
+
+<!-- ===== problem ===== -->
+<section class="prob" id="problem">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label gt reveal">The Real Problem</span>
+      <h2 class="sec-ttl reveal">苦しさの根っこは、いつも「属人化」</h2>
+      <p class="sec-lead reveal">買い手が求めるのは、あなた一人で支える店ではなく「仕組みで回る店」。<br>そして属人化は、日々の経営そのものも静かに圧迫します。</p>
+    </div>
+    <div class="prob-grid">
+      <div class="pcard reveal">
+        <div class="pic"><svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <rect x="32" y="14" width="56" height="26" rx="6" fill="#F0E6F7"/>
+          <rect x="32" y="14" width="56" height="9" rx="5" fill="url(#ig)"/>
+          <rect x="53" y="28" width="14" height="12" rx="2" fill="#fff" stroke="#241F2B" stroke-width="2"/>
+          <path d="M50 66 L40 44 M70 66 L80 44" stroke="#241F2B" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <circle cx="60" cy="60" r="8" fill="#241F2B"/>
+          <path d="M51 70 L69 70 L75 104 Q60 110 45 104 Z" fill="url(#ig)"/>
+          <path d="M30 106 q4 -6 8 0 M82 106 q4 -6 8 0" stroke="#C9BBD9" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg></div>
+        <h3>オーナー依存</h3><p>オーナーや特定スタッフが抜けると、売上が一気に落ちてしまう。</p>
+      </div>
+      <div class="pcard reveal">
+        <div class="pic"><svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <rect x="32" y="28" width="52" height="68" rx="8" fill="#F0E6F7"/>
+          <rect x="48" y="22" width="20" height="11" rx="5" fill="url(#ig)"/>
+          <line x1="42" y1="48" x2="74" y2="48" stroke="#C9BBD9" stroke-width="3" stroke-linecap="round"/>
+          <line x1="42" y1="60" x2="74" y2="60" stroke="#C9BBD9" stroke-width="3" stroke-linecap="round"/>
+          <line x1="42" y1="72" x2="62" y2="72" stroke="#C9BBD9" stroke-width="3" stroke-linecap="round"/>
+          <text x="78" y="40" font-family="Poppins,sans-serif" font-size="11" font-weight="600" fill="#fa7e1e">z</text>
+          <text x="86" y="32" font-family="Poppins,sans-serif" font-size="15" font-weight="600" fill="#d62976">z</text>
+          <text x="96" y="22" font-family="Poppins,sans-serif" font-size="19" font-weight="600" fill="#962fbf">Z</text>
+        </svg></div>
+        <h3>眠る顧客リスト</h3><p>リストはあるのに、最近来なくなったお客様へ連絡できていない。</p>
+      </div>
+      <div class="pcard reveal">
+        <div class="pic"><svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="60" cy="58" r="30" fill="#F0E6F7"/>
+          <circle cx="60" cy="58" r="30" fill="none" stroke="url(#ig)" stroke-width="4"/>
+          <path d="M60 58 L60 40 M60 58 L73 64" stroke="#241F2B" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <circle cx="60" cy="58" r="3.5" fill="#241F2B"/>
+          <circle cx="22" cy="32" r="5" fill="#d62976"/>
+          <circle cx="98" cy="30" r="5" fill="#962fbf"/>
+          <circle cx="100" cy="90" r="5" fill="#fa7e1e"/>
+          <circle cx="22" cy="92" r="5" fill="#4f5bd5"/>
+        </svg></div>
+        <h3>手が回らない</h3><p>施術で手一杯。営業も集客もSNSも、とても時間が足りない。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== bridge ===== -->
+<section class="bridge" id="bridge">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label gt reveal">The Bridge</span>
+      <h2 class="sec-ttl reveal">&ldquo;今をラクにする&rdquo;ことが、<br>&ldquo;将来の選択肢&rdquo;につながる</h2>
+      <p class="sec-lead reveal">属人化をほどくことは、日々の負担を軽くするだけではありません。<br>それは同時に、サロンを「売れる＝価値ある資産」へ変える第一歩です。</p>
+    </div>
+    <div class="bridge-flow">
+      <div class="bnode reveal">
+        <div class="bic"><svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="31" cy="34" r="15" fill="none" stroke="url(#ig)" stroke-width="4"/>
+          <circle cx="31" cy="34" r="4" fill="url(#ig)"/>
+          <circle cx="52" cy="49" r="11" fill="none" stroke="#962fbf" stroke-width="4"/>
+          <circle cx="52" cy="49" r="3" fill="#962fbf"/>
+        </svg></div>
+        <div class="step gt">STEP 01</div><h3>属人化をほどく</h3><p>仕組み化で、誰が対応しても回るサロンへ。</p>
+      </div>
+      <div class="bnode reveal">
+        <div class="bic"><svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="40" cy="40" r="23" fill="#F0E6F7"/>
+          <circle cx="40" cy="40" r="23" fill="none" stroke="url(#ig)" stroke-width="3"/>
+          <circle cx="32" cy="36" r="3" fill="#241F2B"/>
+          <circle cx="48" cy="36" r="3" fill="#241F2B"/>
+          <path d="M31 46 q9 9 18 0" fill="none" stroke="#241F2B" stroke-width="3" stroke-linecap="round"/>
+        </svg></div>
+        <div class="step gt">STEP 02</div><h3>日々がラクになる</h3><p>集客もフォローも自動化。施術に集中できる。</p>
+      </div>
+      <div class="bnode fin reveal">
+        <div class="bic"><svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <rect x="18" y="32" width="36" height="28" rx="4" fill="#fff" opacity=".95"/>
+          <rect x="18" y="26" width="36" height="9" rx="4" fill="#fff" opacity=".65"/>
+          <path d="M48 42 L64 58 L72 50 L56 34 L48 34 Z" fill="#fff"/>
+          <circle cx="55" cy="41" r="2.6" fill="#962fbf"/>
+        </svg></div>
+        <div class="step">RESULT</div><h3>&ldquo;売れる&rdquo;サロンへ</h3><p>続けるも、譲るも。出口を自分で選べる。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== features ===== -->
+<section class="feat" id="features">
+  <div class="wrap">
+    <div class="feat-intro reveal">
+      <img class="staff-point" src="assets/images/staff-point.png" alt="サロンスタッフ">
+      <div class="sec-head">
+        <span class="label gt">Solution</span>
+        <h2 class="sec-ttl">サロン経営を、この画面ひとつに</h2>
+        <span class="ai-badge">✨ AIで自動化 ＆ 時短</span>
+        <p class="sec-lead">集客・顧客管理・マーケティングから、Web上の作業や結果の管理まで、この画面ひとつに。<strong style="color:var(--ink);font-weight:700">AIによる自動化で、これまで何時間もかかっていた作業がぐっと時短。</strong>空いた時間を、お客様と向き合う時間に。</p>
+      </div>
+    </div>
+    <div class="showcase">
+
+      <!-- 01 顧客リスト / リマインド -->
+      <div class="sc-row reveal">
+        <div class="sc-visual">
+          <div class="mock">
+            <div class="mk-bar"><span class="mk-title">顧客リスト</span><span class="mk-live">自動リマインド ON</span></div>
+            <div class="mk-body">
+              <div class="mk-search">🔍 お客様を検索</div>
+              <div class="mk-cust"><span class="mk-av"></span><span class="mk-ci"><b>佐藤 美咲 さま</b><small>最終来店 3か月前</small></span><span class="mk-st st-sent">送信済</span></div>
+              <div class="mk-cust"><span class="mk-av"></span><span class="mk-ci"><b>田中 さやか さま</b><small>最終来店 2か月前</small></span><span class="mk-st st-book">予約済</span></div>
+              <div class="mk-cust"><span class="mk-av"></span><span class="mk-ci"><b>鈴木 あゆみ さま</b><small>最終来店 5か月前</small></span><span class="mk-st st-todo">要フォロー</span></div>
+              <div class="mk-cust"><span class="mk-av"></span><span class="mk-ci"><b>山本 りな さま</b><small>最終来店 4か月前</small></span><span class="mk-st st-sent">送信済</span></div>
+              <div class="mk-cust"><span class="mk-av"></span><span class="mk-ci"><b>高橋 ゆい さま</b><small>最終来店 2か月前</small></span><span class="mk-st st-book">予約済</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="sc-text">
+          <div class="idx gt">01</div>
+          <h3>自動リマインドメール <span class="tag">AIで再来店を自動化</span></h3>
+          <p>来店が途絶えたお客様を、AIが自動で見つけ、お客様ごとに最適なタイミングと文面でフォロー。眠っていた顧客リストが、ひとりでに&ldquo;ループ&rdquo;して動き出します。営業が苦手でも、施術で忙しくても、もう&ldquo;宝の持ち腐れ&rdquo;にしません。</p>
+        </div>
+      </div>
+
+      <!-- 02 顧客カルテ -->
+      <div class="sc-row reveal">
+        <div class="sc-visual">
+          <div class="mock">
+            <div class="mk-bar"><span class="mk-title">顧客カルテ</span></div>
+            <div class="mk-body">
+              <div class="mk-karte-head">
+                <span class="mk-av"></span>
+                <div><b>田中 さやか さま</b>
+                  <div class="mk-tags"><span>来店 12回</span><span>マツエク</span><span>敏感肌</span></div>
+                </div>
+              </div>
+              <div class="mk-hist">
+                <div class="mk-hi"><b>2026/06/02</b>　まつげエクステ（Cカール80本）</div>
+                <div class="mk-hi"><b>2026/04/18</b>　ラッシュリフト</div>
+                <div class="mk-hi"><b>2026/03/05</b>　ボリュームラッシュ</div>
+              </div>
+              <div class="mk-memo">メモ：いつもナチュラルな自まつげ風をご希望。目元が乾燥しやすい。次回はまつげ美容液をご提案。</div>
+            </div>
+          </div>
+        </div>
+        <div class="sc-text">
+          <div class="idx gt">02</div>
+          <h3>顧客カルテ管理 <span class="tag">脱・属人化</span></h3>
+          <p>お客様一人ひとりの来店履歴・施術内容・好み・会話メモまでを一元管理。情報が&ldquo;人&rdquo;ではなく&ldquo;システム&rdquo;に残るから、スタッフが替わっても、誰が対応しても、同じ品質でお迎えできます。</p>
+        </div>
+      </div>
+
+      <!-- 03 SNS投稿＋分析 -->
+      <div class="sc-row reveal">
+        <div class="sc-visual">
+          <div class="mock">
+            <div class="mk-bar"><span class="mk-title">投稿＆分析</span></div>
+            <div class="mk-body">
+              <div class="mk-plats">
+                <span class="mk-plat on">Instagram</span><span class="mk-plat on">TikTok</span><span class="mk-plat">YouTube</span><span class="mk-plat on">X</span><span class="mk-plat">Threads</span><span class="mk-plat on">ブログ記事</span><span class="mk-plat">HP更新</span>
+              </div>
+              <div class="mk-compose"><b>新作ラッシュデザイン、入荷しました✨</b><br>＃アイサロン ＃マツエク …</div>
+              <div class="mk-postact"><span class="imgs"><i></i><i></i></span><span class="mk-postbtn">予約投稿</span></div>
+              <div class="mk-divider"></div>
+              <div class="mk-kpis">
+                <div class="mk-kpi"><b>219,803</b><small>総閲覧</small></div>
+                <div class="mk-kpi"><b>2,595</b><small>いいね</small></div>
+                <div class="mk-kpi"><b>1.22%</b><small>反応率</small></div>
+              </div>
+              <div class="mk-sec">日別の閲覧推移</div>
+              <div class="mk-bars"><i style="height:40%"></i><i style="height:62%"></i><i style="height:48%"></i><i style="height:80%"></i><i style="height:70%"></i><i style="height:95%"></i><i style="height:66%"></i></div>
+              <div class="mk-axis"><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span><span>日</span></div>
+              <div class="mk-grid2" style="margin-top:13px">
+                <div class="mk-panel">
+                  <div class="pt">性別の割合</div>
+                  <div class="mk-donut"></div>
+                  <div class="mk-leg">
+                    <span style="--c:var(--ig-purple)">女性 54%</span>
+                    <span style="--c:var(--ig-blue)">男性 28%</span>
+                    <span style="--c:#d8d1e0">未設定 18%</span>
+                  </div>
+                </div>
+                <div class="mk-panel">
+                  <div class="pt">エリア別 Top</div>
+                  <div class="mk-hbar"><small>大阪</small><span class="t"><i style="width:96%"></i></span></div>
+                  <div class="mk-hbar"><small>東京</small><span class="t"><i style="width:62%"></i></span></div>
+                  <div class="mk-hbar"><small>福岡</small><span class="t"><i style="width:44%"></i></span></div>
+                  <div class="mk-hbar"><small>北海道</small><span class="t"><i style="width:33%"></i></span></div>
+                  <div class="mk-hbar"><small>兵庫</small><span class="t"><i style="width:25%"></i></span></div>
+                </div>
+              </div>
+              <div class="mk-sec">閲覧数 Top 3</div>
+              <div class="mk-rank">
+                <div class="mk-rk"><span class="no">1</span><span class="nm">デカ目に見えるラッシュ術</span><span class="vl">41,648</span></div>
+                <div class="mk-rk"><span class="no">2</span><span class="nm">大人ナチュラル束感まつげ</span><span class="vl">16,870</span></div>
+                <div class="mk-rk"><span class="no">3</span><span class="nm">梅雨でも取れにくいマツエク</span><span class="vl">14,569</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sc-text">
+          <div class="idx gt">03</div>
+          <h3>SNS・Web集客を1画面で <span class="tag">集客まるごと</span></h3>
+          <p>Instagram・TikTok・YouTube・X・Threadsへの投稿と分析を、この画面ひとつから。閲覧数やいいねの推移はAIがグラフで自動可視化。さらに<strong style="color:var(--ink);font-weight:700">ブログ・コラム記事の入稿や、ホームページの改修・更新</strong>までこの画面で完結。<strong style="color:var(--ink);font-weight:700">AIが「どんなキーワードで、どんな企画を出すべきか」まで提案</strong>します。</p>
+        </div>
+      </div>
+
+    </div>
+    <p class="feat-note reveal">基本はAIとシステムでご自身で完結できます。「それでも記事作成などを任せたい」方には、別途オプションで私たちが代行することもできます（買い切り価格には含まれません）。</p>
+  </div>
+</section>
+
+<!-- ===== price ===== -->
+<section class="price" id="price">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label gt reveal">Price</span>
+      <h2 class="sec-ttl reveal">買い切り。毎月の固定費はありません。</h2>
+    </div>
+    <div class="price-card reveal">
+      <div class="price-inner">
+        <div class="cap">Pre-launch Monitor Price</div>
+        <div class="limit-badge">本格リリース前 ｜ 先着20サロン限定</div>
+        <div class="price-regular">通常 ¥99,000</div>
+        <div class="price-amount gt"><span class="s">¥</span><span class="n">79,200</span></div>
+        <div class="price-tax">税込・買い切り</div>
+        <div class="price-note">20サロンに達し次第、通常価格に戻ります。</div>
+        <div class="price-incl">
+          <span>自動リマインド</span><span>顧客カルテ</span><span>SNS投稿・分析</span><span>記事入稿</span><span>AI企画提案</span><span>AI自動化</span>
+        </div>
+        <div class="price-cta">
+          <a href="#" data-buy class="btn-ig">Salon Loop を導入する</a>
+          <a href="#cta" data-cta class="btn-line">まず説明会に参加する</a>
+          <span class="sub">決済ページへ進みます／不安な方は説明会から</span>
+        </div>
+      </div>
+    </div>
+    <div class="addon reveal">
+      <div class="a-text">
+        <span class="label gt">Future Vision ｜ 広告収益</span>
+        <h3>いずれは、使うほどに<span class="gt">広告収益</span>が生まれる仕組みへ。</h3>
+        <p>私たちが描いているのは、サロン様が&ldquo;使うほどに収益が生まれる&rdquo;未来です。将来的には、<strong>本部がサロン様に代わって営業</strong>し、そのサロンの客層に合った美容・健康関連の商品を持つ企業から、<strong>PR（タイアップ）案件としての広告費</strong>をお預かりする——そんな仕組みを構想しています。</p>
+        <p>その広告を、お客様へ送るリマインドメールなどの下部に「PR」として添えて配信いただくことで、<strong>サロン様に広告費がプラスされる</strong>。そんな&ldquo;稼げるサロン&rdquo;への進化を目指しています。</p>
+        <div class="tags">
+          <span>アイサロン</span><span>パーソナルジム</span><span>ヨガ</span><span>栄養・料理教室</span>
+        </div>
+        <p class="cond">※ これは現在準備を進めている<strong style="color:var(--ink-soft)">将来の構想</strong>です。案件の有無は時期・エリア・サロンの状況により異なり、すべてのサロン様にお約束できるものではありません。あくまで「広がれば嬉しいプラス」として描いています。</p>
+      </div>
+      <div class="a-mail">
+        <div class="mailmock">
+          <div class="mm-bar">✉ リマインドメール</div>
+          <div class="mm-head">
+            <div class="mm-from">From：あなたのアイサロン</div>
+            <div class="mm-subj">またお会いできるのを楽しみにしています✨</div>
+          </div>
+          <div class="mm-body">
+            佐藤さま、お久しぶりです。<br>
+            前回のご来店から2か月が経ちました。そろそろリペアのタイミングです。<br>
+            <a class="mm-cta">ご予約はこちら</a>
+          </div>
+          <div class="mm-pr">
+            <span class="prtag">PR</span>
+            <div class="mm-prin">
+              <span class="mm-prthumb"><svg width="24" height="30" viewBox="0 0 24 30" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="2" width="8" height="5" rx="1.5" fill="#962fbf"/><rect x="5" y="7" width="14" height="21" rx="4" fill="url(#ig)"/><rect x="8" y="13" width="8" height="9" rx="2" fill="#fff" opacity=".55"/></svg></span>
+              <div class="mm-prtx"><b>まつげ美容液 &ldquo;ラッシュグロウ&rdquo;</b><small>提供：◯◯コスメ｜目元ケアの新定番</small></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== cta ===== -->
+<section class="cta" id="cta">
+  <div class="wrap narrow">
+    <img class="cta-fig reveal" src="assets/images/staff-clipboard.png" alt="サロンスタッフ">
+    <h2 class="reveal">はじめ方は、2つ。</h2>
+    <p class="reveal">すぐに使いたい方は導入から。まずは話を聞いてみたい方は、無料の説明会から。<br><strong>無理な商談はしません。説明会だけの参加も大歓迎です。</strong></p>
+    <div class="cta-opts reveal">
+      <div class="copt">
+        <div class="cpic"><svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <rect x="26" y="32" width="68" height="44" rx="6" fill="#F0E6F7"/>
+          <rect x="32" y="38" width="56" height="32" rx="3" fill="#fff"/>
+          <circle cx="60" cy="50" r="7" fill="url(#ig)"/>
+          <path d="M50 64 q10 -11 20 0 Z" fill="url(#ig)"/>
+          <path d="M20 86 L100 86 L92 76 L28 76 Z" fill="#C9BBD9"/>
+          <circle cx="40" cy="99" r="4.5" fill="#d62976"/>
+          <circle cx="60" cy="102" r="4.5" fill="#962fbf"/>
+          <circle cx="80" cy="99" r="4.5" fill="#fa7e1e"/>
+        </svg></div>
+        <div class="ci gt">SEMINAR</div>
+        <h3>無料オンライン説明会</h3>
+        <ul class="copt-list">
+          <li>Salon Loop の活用について</li>
+          <li>サロンM&amp;A の基礎セミナー</li>
+        </ul>
+        <a href="#" data-cta class="copt-btn">オンライン説明会に参加する</a>
+      </div>
+      <div class="copt copt-buy">
+        <div class="cpic"><svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="60" cy="60" r="40" fill="#F0E6F7"/>
+          <path d="M42 60 l12 12 24 -26" fill="none" stroke="url(#ig)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg></div>
+        <div class="ci gt">START NOW</div>
+        <h3>Salon Loop を導入する</h3>
+        <p class="copt-price"><b>¥79,200</b>税込・買い切り（モニター価格）</p>
+        <a href="#" data-buy class="copt-btn buy">導入する（決済へ進む）</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== faq ===== -->
+<section class="faq" id="faq">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label gt reveal">Q &amp; A</span>
+      <h2 class="sec-ttl reveal">よくあるご質問</h2>
+    </div>
+    <div class="faq-list">
+      <details class="faq-item reveal"><summary class="faq-q">今すぐ売る（M&amp;A）つもりはないのですが、それでも意味はありますか？<span class="pm gt">＋</span></summary><div class="faq-a">もちろんです。むしろ多くの方が「今をラクにしたい」から始めます。属人化をほどくと日々の経営が軽くなり、その結果として&ldquo;いざというとき売れる状態&rdquo;も手に入る、という順番です。出口は将来の選択肢として持っておくだけで十分です。</div></details>
+      <details class="faq-item reveal"><summary class="faq-q">パソコンやSNSが苦手でも使えますか？<span class="pm gt">＋</span></summary><div class="faq-a">はい。難しい操作の多くはシステムが自動で行います。それでも難しい記事作成などは、私たちが代行することもできますのでご安心ください。</div></details>
+      <details class="faq-item reveal"><summary class="faq-q">モニター価格79,200円（税込）のほかに、毎月かかる費用はありますか？<span class="pm gt">＋</span></summary><div class="faq-a">基本機能は買い切りで、追加の月額固定費はありません。代行など任意のサポートをご希望の場合のみ、別途ご相談となります。</div></details>
+      <details class="faq-item reveal"><summary class="faq-q">相談したら、しつこく営業されませんか？<span class="pm gt">＋</span></summary><div class="faq-a">しません。私たちは無理な商談を行わない方針です。相談はあくまで「お話を聞く・お答えする」場です。合わなければ、それで構いません。</div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ===== footer ===== -->
+<footer>
+  <div class="fb">Salon&nbsp;Loop</div>
+  <div class="fconcept gt">サロンのお客様を、ループさせる仕組み</div>
+  <div class="fi">
+    株式会社 be the actress<br>
+    大阪市西区土佐堀2-1-3<br>
+    info@betheactress.com
+  </div>
+  <div class="cp">© 2026 be the actress Inc.</div>
+</footer>
+
+<div class="sticky">
+  <a href="#price" data-buy class="buy">導入する（¥79,200）</a>
+  <a href="#cta" data-cta class="ask">説明会に参加</a>
+</div>
+
+<script>
+  const io = new IntersectionObserver((es)=>{
+    es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:.14});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  const hd = document.getElementById('hd');
+  const onScroll = ()=>{ hd.classList.toggle('scrolled', window.scrollY > 40); };
+  window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  // ===== リンク先設定 =====
+  const PURCHASE_URL = '#'; // ← 決済/購入ページのURLに差し替え（Stripe・BASE・STORES等）
+  const CONTACT_URL  = '#'; // ← オンライン説明会の申込フォームURLに差し替え
+  if(PURCHASE_URL && PURCHASE_URL !== '#'){
+    document.querySelectorAll('[data-buy]').forEach(a=>a.setAttribute('href',PURCHASE_URL));
+  }
+  if(CONTACT_URL && CONTACT_URL !== '#'){
+    document.querySelectorAll('[data-cta]').forEach(a=>a.setAttribute('href',CONTACT_URL));
+  }
+</script>
+
+</body>
+</html>
