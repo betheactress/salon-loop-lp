@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Salon Loop｜サロンのお客様をループさせる仕組み</title>
-<meta name="description" content="廃業を経験し、2件のM&A（事業譲渡）を成功させた代表が届ける、サロンのためのオールインワン経営システム。本格リリース前モニター価格79,200円（税込・先着20サロン）。">
+<meta name="description" content="廃業を経験し、2件のM&A（事業譲渡）を成功させた代表が届ける、サロンのためのオールインワン経営システム。3日間無料お試し→月額9,900円（税込）でサーバー管理・保守込み。LP制作やSNS投稿代行も3,000円〜。">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Salon Loop｜サロンのお客様をループさせる仕組み">
 <meta property="og:locale" content="ja_JP">
@@ -225,6 +225,17 @@
   .price-amount .n{font-size:clamp(56px,13vw,84px);letter-spacing:.01em}
   .price-tax{font-size:14px;color:var(--ink-soft);font-weight:500}
   .price-note{margin-top:8px;font-size:12.5px;color:var(--muted)}
+  .price-amount .per{font-family:var(--pop);font-weight:600;font-size:24px;color:var(--muted);margin-left:6px}
+  /* service menu */
+  .svcmenu{max-width:880px;margin:60px auto 0;background:var(--bg2);border-radius:24px;padding:clamp(30px,5vw,48px);text-align:center}
+  .svcmenu .label{margin-bottom:14px;display:inline-block}
+  .svcmenu h3{font-weight:900;font-size:clamp(19px,2.8vw,26px);line-height:1.6;letter-spacing:.02em;margin-bottom:16px}
+  .svcmenu>p{font-size:13.5px;color:var(--ink-soft);line-height:2.1;max-width:600px;margin:0 auto}
+  .svc-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:32px}
+  .svc{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px 16px}
+  .svc b{display:block;font-size:14px;margin-bottom:10px;color:var(--ink)}
+  .svc span{font-family:var(--pop);font-weight:600;font-size:19px;background:var(--ig);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .svc small{display:block;font-size:10px;color:var(--muted);margin-top:2px;font-family:var(--sans)}
   .price-incl{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:26px 0 6px}
   .price-incl span{font-size:11.5px;color:var(--ink-soft);background:var(--bg3);border-radius:50px;padding:6px 14px}
   .price-cta{margin-top:30px;display:flex;flex-direction:column;gap:12px;align-items:center}
@@ -393,7 +404,7 @@
           <span class="c third gt">売る、という第3の道</span>
         </div>
         <div class="hero-cta reveal">
-          <a href="#price" data-buy class="btn-ig">Salon Loop を導入する（¥79,200 税込）</a>
+          <a href="#price" data-buy class="btn-ig">3日間無料ではじめる（月額¥9,900）</a>
           <a href="#cta" data-cta class="btn-line">オンライン説明会に参加する</a>
         </div>
       </div>
@@ -667,7 +678,7 @@
       </div>
 
     </div>
-    <p class="feat-note reveal">基本はAIとシステムでご自身で完結できます。「それでも記事作成などを任せたい」方には、別途オプションで私たちが代行することもできます（買い切り価格には含まれません）。</p>
+    <p class="feat-note reveal">基本はAIとシステムでご自身で完結。「作って・直して・投稿して」を任せたいときは、管理画面から3,000円〜で気軽に依頼できます（下記）。</p>
   </div>
 </section>
 
@@ -676,24 +687,34 @@
   <div class="wrap">
     <div class="sec-head">
       <span class="label gt reveal">Price</span>
-      <h2 class="sec-ttl reveal">買い切り。毎月の固定費はありません。</h2>
+      <h2 class="sec-ttl reveal">まず3日間、無料。<br>その後は月額9,900円で、ぜんぶ込み。</h2>
     </div>
     <div class="price-card reveal">
       <div class="price-inner">
-        <div class="cap">Pre-launch Monitor Price</div>
-        <div class="limit-badge">本格リリース前 ｜ 先着20サロン限定</div>
-        <div class="price-regular">通常 ¥99,000</div>
-        <div class="price-amount gt"><span class="s">¥</span><span class="n">79,200</span></div>
-        <div class="price-tax">税込・買い切り</div>
-        <div class="price-note">20サロンに達し次第、通常価格に戻ります。</div>
+        <div class="cap">3-Day Free Trial</div>
+        <div class="limit-badge">🎁 まず3日間 無料でお試し</div>
+        <div class="price-amount gt"><span class="s">¥</span><span class="n">9,900</span><span class="per">/ 月</span></div>
+        <div class="price-tax">税込 ・ 初期費用0円 ・ 4日目から自動課金</div>
+        <div class="price-note">カード登録のうえお申し込み → <strong style="color:var(--ink-soft);font-weight:700">最初の3日間は無料</strong>でフル機能をお試し。4日目から自動的に月額9,900円が課金されます。期間内に解約すれば料金はかかりません。</div>
         <div class="price-incl">
-          <span>自動リマインド</span><span>顧客カルテ</span><span>SNS投稿・分析</span><span>記事入稿</span><span>AI企画提案</span><span>AI自動化</span>
+          <span>全機能つかい放題</span><span>サーバー管理</span><span>保守・サポート</span><span>自動アップデート</span><span>AI企画提案</span><span>AI自動化</span>
         </div>
         <div class="price-cta">
-          <a href="#" data-buy class="btn-ig">Salon Loop を導入する</a>
+          <a href="#" data-buy class="btn-ig">3日間無料ではじめる</a>
           <a href="#cta" data-cta class="btn-line">まず説明会に参加する</a>
-          <span class="sub">決済ページへ進みます／不安な方は説明会から</span>
+          <span class="sub">カード登録で3日間無料・4日目から月額課金／不安な方は説明会から</span>
         </div>
+      </div>
+    </div>
+
+    <div class="svcmenu reveal">
+      <span class="label gt">Easy Request ｜ 管理画面から依頼</span>
+      <h3>「作って」「直して」「投稿して」も、<br><span class="gt">3,000円〜</span>の格安価格で気軽に。</h3>
+      <p>LP制作・改修や、SNS投稿の代行などを、管理画面のボタンひとつから依頼できます。忙しいとき・苦手なことは、そのままプロにお任せ。外注先を探す手間も、高い制作費もいりません。</p>
+      <div class="svc-cards">
+        <div class="svc"><b>LP・ページ制作</b><span>¥3,000〜</span><small>新規ページもおまかせ</small></div>
+        <div class="svc"><b>サイト改修・更新</b><span>¥3,000〜</span><small>文言・画像の修正も</small></div>
+        <div class="svc"><b>SNS投稿の代行</b><span>¥3,000〜</span><small>作成から投稿まで</small></div>
       </div>
     </div>
     <div class="addon reveal">
@@ -763,10 +784,10 @@
           <circle cx="60" cy="60" r="40" fill="#F0E6F7"/>
           <path d="M42 60 l12 12 24 -26" fill="none" stroke="url(#ig)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
         </svg></div>
-        <div class="ci gt">START NOW</div>
-        <h3>Salon Loop を導入する</h3>
-        <p class="copt-price"><b>¥79,200</b>税込・買い切り（モニター価格）</p>
-        <a href="#" data-buy class="copt-btn buy">導入する（決済へ進む）</a>
+        <div class="ci gt">3 DAYS FREE</div>
+        <h3>まず3日間、無料でお試し</h3>
+        <p class="copt-price"><b>¥9,900</b>／月（税込）｜初期費用0円・4日目から課金</p>
+        <a href="#" data-buy class="copt-btn buy">3日間無料ではじめる</a>
       </div>
     </div>
   </div>
@@ -781,8 +802,9 @@
     </div>
     <div class="faq-list">
       <details class="faq-item reveal"><summary class="faq-q">今すぐ売る（M&amp;A）つもりはないのですが、それでも意味はありますか？<span class="pm gt">＋</span></summary><div class="faq-a">もちろんです。むしろ多くの方が「今をラクにしたい」から始めます。属人化をほどくと日々の経営が軽くなり、その結果として&ldquo;いざというとき売れる状態&rdquo;も手に入る、という順番です。出口は将来の選択肢として持っておくだけで十分です。</div></details>
-      <details class="faq-item reveal"><summary class="faq-q">パソコンやSNSが苦手でも使えますか？<span class="pm gt">＋</span></summary><div class="faq-a">はい。難しい操作の多くはシステムが自動で行います。それでも難しい記事作成などは、私たちが代行することもできますのでご安心ください。</div></details>
-      <details class="faq-item reveal"><summary class="faq-q">モニター価格79,200円（税込）のほかに、毎月かかる費用はありますか？<span class="pm gt">＋</span></summary><div class="faq-a">基本機能は買い切りで、追加の月額固定費はありません。代行など任意のサポートをご希望の場合のみ、別途ご相談となります。</div></details>
+      <details class="faq-item reveal"><summary class="faq-q">パソコンやSNSが苦手でも使えますか？<span class="pm gt">＋</span></summary><div class="faq-a">はい。難しい操作の多くはシステムが自動で行います。それでも難しい記事作成やSNS投稿などは、管理画面から3,000円〜で私たちに依頼することもできますのでご安心ください。</div></details>
+      <details class="faq-item reveal"><summary class="faq-q">無料お試し期間中に解約したら、料金はかかりますか？<span class="pm gt">＋</span></summary><div class="faq-a">かかりません。お申し込み時にカード登録が必要ですが、課金が始まるのは4日目から。最初の3日間のお試し期間内に解約いただければ、料金は一切発生しません。まずは気軽にフル機能をお試しください。</div></details>
+      <details class="faq-item reveal"><summary class="faq-q">月額9,900円のほかに、初期費用やサーバー代はかかりますか？<span class="pm gt">＋</span></summary><div class="faq-a">初期費用は0円です。サーバー管理・保守・アップデートまで、すべて月額9,900円（税込）に含まれます。別途かかるのは、LP制作やSNS投稿代行など個別にご依頼いただいた場合の都度料金（3,000円〜）のみです。</div></details>
       <details class="faq-item reveal"><summary class="faq-q">相談したら、しつこく営業されませんか？<span class="pm gt">＋</span></summary><div class="faq-a">しません。私たちは無理な商談を行わない方針です。相談はあくまで「お話を聞く・お答えする」場です。合わなければ、それで構いません。</div></details>
     </div>
   </div>
@@ -801,7 +823,7 @@
 </footer>
 
 <div class="sticky">
-  <a href="#price" data-buy class="buy">導入する（¥79,200）</a>
+  <a href="#price" data-buy class="buy">3日間無料ではじめる</a>
   <a href="#cta" data-cta class="ask">説明会に参加</a>
 </div>
 
