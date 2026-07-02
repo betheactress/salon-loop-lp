@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salon Loop for 採用｜SaaS UI サンプル</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5F3F9; --panel:#FFFFFF; --ink:#241F2B; --ink2:#5A5568; --muted:#938DA3;
+    --line:#EDE8F2; --line2:#E3DBEC;
+    --ig:linear-gradient(120deg,#feda75 0%,#fa7e1e 22%,#d62976 52%,#962fbf 76%,#4f5bd5 100%);
+    --ig-soft:linear-gradient(120deg,#fde7c9,#f7d2da 45%,#e7d2f0 75%,#d9def5);
+    --pink:#d62976; --purple:#962fbf; --blue:#4f5bd5; --green:#1f9d57; --amber:#e8890c;
+    --sans:'Noto Sans JP',sans-serif; --pop:'Poppins',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--sans);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;font-size:14px}
+  a{color:inherit;text-decoration:none}
+  .gt{background:var(--ig);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  .app{display:grid;grid-template-columns:246px 1fr;min-height:100vh}
+
+  /* ===== sidebar ===== */
+  .sidebar{background:#fff;border-right:1px solid var(--line);padding:20px 16px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100vh}
+  .brand{display:flex;align-items:center;gap:9px;padding:6px 8px 16px}
+  .brand .dot{width:28px;height:28px;border-radius:9px;background:var(--ig)}
+  .brand b{font-family:var(--pop);font-weight:600;font-size:17px}
+  .brand .edition{font-size:10px;font-weight:700;color:#fff;background:var(--ig);border-radius:6px;padding:2px 7px;margin-left:2px}
+  .nav-group{font-size:10.5px;letter-spacing:.08em;color:var(--muted);font-weight:700;padding:14px 10px 6px;display:flex;align-items:center;gap:7px}
+  .nav-group .plus{font-size:9px;color:#fff;background:var(--ig);border-radius:5px;padding:1px 6px}
+  .nav{display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:10px;color:var(--ink2);font-size:13.5px;font-weight:500;cursor:pointer;transition:background .15s}
+  .nav:hover{background:#F4EFF9}
+  .nav.active{background:linear-gradient(90deg,rgba(150,47,191,.12),rgba(214,41,118,.05));color:var(--ink);font-weight:700}
+  .nav svg{width:18px;height:18px;flex:0 0 18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .nav.active svg{stroke:var(--purple)}
+  .nav .badge{margin-left:auto;font-size:9.5px;font-weight:700;color:#fff;background:var(--pink);border-radius:20px;padding:1px 7px}
+  .side-foot{margin-top:auto;background:linear-gradient(135deg,#F3E9FB,#FCE9F1);border-radius:14px;padding:14px}
+  .side-foot .t{font-size:11px;color:var(--ink2);font-weight:700}
+  .side-foot .p{font-family:var(--pop);font-weight:700;font-size:18px;margin-top:2px}
+  .side-foot .p small{font-size:11px;color:var(--muted);font-family:var(--sans)}
+  .side-foot .sf-note{font-size:10px;color:var(--muted);margin-top:6px;line-height:1.6}
+
+  /* ===== main ===== */
+  .main{display:flex;flex-direction:column;min-width:0}
+  .topbar{height:62px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 26px;position:sticky;top:0;z-index:20}
+  .search{flex:1;max-width:420px;background:var(--bg);border-radius:10px;padding:9px 14px;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:9px}
+  .tb-right{margin-left:auto;display:flex;align-items:center;gap:16px}
+  .tb-ic{width:20px;height:20px;stroke:var(--ink2);fill:none;stroke-width:1.8;position:relative}
+  .tb-dot{position:relative}
+  .tb-dot::after{content:"";position:absolute;top:-2px;right:-2px;width:7px;height:7px;border-radius:50%;background:var(--pink);border:1.5px solid #fff}
+  .avatar{width:34px;height:34px;border-radius:50%;background:var(--ig-soft);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--purple)}
+  .content{padding:26px 30px 60px;max-width:1160px}
+
+  /* page head */
+  .ph{display:flex;align-items:flex-end;gap:14px;margin-bottom:24px}
+  .ph h1{font-size:22px;font-weight:900;letter-spacing:.01em}
+  .ph .sub{font-size:12px;color:var(--muted);margin-bottom:3px}
+  .ph .btn{margin-left:auto}
+  .btn{display:inline-flex;align-items:center;gap:7px;background:var(--ig);color:#fff;font-weight:700;font-size:13px;border:none;border-radius:10px;padding:11px 18px;cursor:pointer;box-shadow:0 8px 20px rgba(150,47,191,.22)}
+  .btn.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line2);box-shadow:none}
+  .btn.sm{padding:7px 12px;font-size:11.5px;border-radius:8px;box-shadow:none}
+
+  /* cards */
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .kpi .lb{font-size:12px;color:var(--muted)}
+  .kpi .v{font-family:var(--pop);font-weight:700;font-size:30px;margin-top:6px;line-height:1}
+  .kpi .d{font-size:11px;font-weight:700;margin-top:8px}
+  .kpi .d.up{color:var(--green)} .kpi .d.dn{color:var(--pink)}
+  .card-t{font-size:13px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+  .card-t .more{margin-left:auto;font-size:11px;color:var(--muted);font-weight:500;cursor:pointer}
+
+  /* funnel */
+  .fn-row{display:flex;align-items:center;gap:12px;margin-bottom:11px}
+  .fn-lb{width:78px;font-size:12px;color:var(--ink2);flex:0 0 78px}
+  .fn-track{flex:1}
+  .fn-bar{background:var(--ig);color:#fff;font-size:11px;font-weight:700;border-radius:8px;padding:7px 12px;display:flex;justify-content:space-between;min-width:60px}
+  .fn-bar .pct{opacity:.85;font-weight:500}
+
+  /* bars chart */
+  .bars{display:flex;align-items:flex-end;gap:10px;height:120px;padding-top:8px}
+  .bars .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+  .bars .col i{width:70%;border-radius:6px 6px 0 0;background:var(--ig);display:block}
+  .bars .col small{font-size:10px;color:var(--muted)}
+
+  /* horizontal bars */
+  .hb{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .hb .nm{width:82px;font-size:12px;color:var(--ink2);flex:0 0 82px}
+  .hb .tk{flex:1;height:9px;background:#EFE9F5;border-radius:20px;overflow:hidden}
+  .hb .tk i{display:block;height:100%;background:var(--ig);border-radius:20px}
+  .hb .vl{font-size:11px;color:var(--muted);width:28px;text-align:right}
+
+  /* todo list */
+  .todo{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line)}
+  .todo:last-child{border:none}
+  .todo .ico{width:32px;height:32px;border-radius:9px;background:var(--ig-soft);display:flex;align-items:center;justify-content:center;flex:0 0 32px}
+  .todo .tx{flex:1;font-size:12.5px}
+  .todo .tx small{color:var(--muted);font-size:11px}
+  .tag{font-size:10px;font-weight:700;border-radius:20px;padding:3px 9px}
+  .tag.g{background:#eafaf0;color:var(--green)} .tag.b{background:#eef0ff;color:var(--blue)}
+  .tag.p{background:#fdeef4;color:var(--pink)} .tag.a{background:#fdf1e3;color:var(--amber)}
+  .tag.grey{background:#f0edf5;color:var(--ink2)}
+
+  /* ===== pipeline (kanban) ===== */
+  .hl-banner{background:linear-gradient(120deg,rgba(150,47,191,.10),rgba(214,41,118,.06));border:1px solid #f0dcf3;border-radius:12px;padding:13px 18px;font-size:12.5px;color:var(--ink);display:flex;align-items:center;gap:10px;margin-bottom:20px}
+  .hl-banner b{font-weight:700}
+  .hl-banner .chip{font-size:10px;font-weight:700;color:#fff;background:var(--ig);border-radius:20px;padding:3px 10px;margin-left:auto;flex:0 0 auto}
+  .kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .kcol{background:#F1EDF7;border-radius:14px;padding:12px;min-height:200px}
+  .kcol-h{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;padding:4px 6px 12px}
+  .kcol-h .n{font-size:11px;color:var(--muted);font-weight:600}
+  .kcard{background:#fff;border:1px solid var(--line);border-radius:11px;padding:12px;margin-bottom:10px;box-shadow:0 2px 6px rgba(80,50,120,.05)}
+  .kcard.drag{box-shadow:0 14px 30px rgba(150,47,191,.22);border-color:#e6c8ee;transform:rotate(-1.5deg)}
+  .kc-top{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+  .kc-av{width:30px;height:30px;border-radius:50%;background:var(--ig-soft);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--purple);flex:0 0 30px}
+  .kc-top b{font-size:12.5px;display:block}
+  .kc-top small{font-size:10.5px;color:var(--muted)}
+  .kc-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .kc-btn{width:100%;font-size:11px;font-weight:700;color:var(--purple);background:#F6EEFB;border:1px solid #ecd9f5;border-radius:8px;padding:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+  .kc-btn:hover{background:var(--ig);color:#fff;border-color:transparent}
+
+  /* candidate detail */
+  .cand{display:grid;grid-template-columns:1.5fr 1fr;gap:16px}
+  .cand-head{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+  .cand-head .av{width:60px;height:60px;border-radius:50%;background:var(--ig-soft);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:var(--purple)}
+  .cand-head h2{font-size:19px;font-weight:900}
+  .cand-head .m{font-size:12px;color:var(--muted);margin-top:3px}
+  .tl{border-left:2px solid var(--line2);margin-left:6px;padding-left:18px}
+  .tl-i{position:relative;padding:9px 0;font-size:12.5px;color:var(--ink2)}
+  .tl-i::before{content:"";position:absolute;left:-25px;top:14px;width:9px;height:9px;border-radius:50%;background:var(--purple)}
+  .tl-i b{color:var(--ink)}
+  .memo{background:var(--bg);border-radius:10px;padding:13px 15px;font-size:12px;color:var(--ink2);line-height:1.9;margin-top:10px}
+  .score{display:flex;align-items:baseline;gap:6px}
+  .score .n{font-family:var(--pop);font-weight:700;font-size:34px}
+  .score small{color:var(--muted);font-size:12px}
+  .rowline{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+  .rowline:last-child{border:none}
+  .switch{width:36px;height:20px;border-radius:20px;background:var(--ig);position:relative;flex:0 0 36px}
+  .switch::after{content:"";position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:50%;background:#fff}
+  .switch.off{background:#d9d2e4}.switch.off::after{left:2px;right:auto}
+
+  /* SNS composer + charts */
+  .plats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:13px}
+  .plat{font-size:11px;font-weight:600;border-radius:9px;padding:7px 12px;border:1.5px solid var(--line2);color:var(--muted);cursor:pointer;user-select:none}
+  .plat.on{background:var(--ig);color:#fff;border-color:transparent}
+  .compose{background:var(--bg);border-radius:10px;padding:14px 16px;font-size:13px;color:var(--ink2);line-height:1.95;min-height:64px}
+  .compose b{color:var(--ink)}
+  .compose-act{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+  .compose-act .imgs{display:flex;gap:6px}
+  .compose-act .imgs i{width:36px;height:36px;border-radius:8px;background:var(--ig-soft);display:block}
+  .donut{width:130px;height:130px;border-radius:50%;margin:4px auto;position:relative;background:conic-gradient(var(--purple) 0 44%,var(--pink) 44% 70%,var(--amber) 70% 88%,var(--blue) 88% 100%)}
+  .donut::after{content:"";position:absolute;inset:37px;background:#fff;border-radius:50%}
+  .dwrap{display:grid;grid-template-columns:130px 1fr;gap:16px;align-items:center}
+  .dlegend{display:flex;flex-direction:column;gap:9px}
+  .dlegend span{font-size:12px;color:var(--ink2);display:flex;align-items:center;gap:8px}
+  .dlegend span::before{content:"";width:9px;height:9px;border-radius:3px;background:var(--c,#ccc)}
+  .rank .rk{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+  .rank .rk:last-child{border:none}
+  .rank .no{font-family:var(--pop);font-weight:700;color:var(--purple);width:16px;font-size:14px}
+  .rank .nm{flex:1;font-size:12.5px}
+  .rank .nm small{display:block;color:var(--muted);font-size:10.5px}
+  .rank .vl{font-size:12px;font-weight:700;color:var(--ink2)}
+  /* placeholder */
+  .placeholder{text-align:center;padding:80px 20px;color:var(--muted)}
+  .placeholder .pi{width:66px;height:66px;border-radius:18px;background:var(--ig-soft);margin:0 auto 18px;display:flex;align-items:center;justify-content:center}
+  .placeholder h3{font-size:17px;color:var(--ink);margin-bottom:8px}
+  .placeholder p{font-size:12.5px;line-height:1.9}
+
+  /* toast */
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:13px 22px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 16px 40px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:.35s;display:flex;align-items:center;gap:10px;z-index:100}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast .ck{width:22px;height:22px;border-radius:50%;background:var(--ig);display:flex;align-items:center;justify-content:center;font-size:12px}
+
+  [hidden]{display:none !important}
+  .demo-note{font-size:11px;color:var(--muted);text-align:center;padding:10px;background:#fff8ec;border-top:1px solid #f2e4c9}
+  @media(max-width:900px){.app{grid-template-columns:1fr}.sidebar{display:none}.grid4{grid-template-columns:1fr 1fr}.kanban{grid-template-columns:1fr 1fr}.cand{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="demo-note">🖥 これは Salon Loop〈採用版〉のSaaS画面サンプルです（デモ用ダミーデータ）。左メニューをクリックすると画面が切り替わります。</div>
+
+<div class="app">
+  <!-- ===== sidebar ===== -->
+  <aside class="sidebar">
+    <div class="brand"><span class="dot"></span><b>Salon&nbsp;Loop</b><span class="edition">採用版</span></div>
+
+    <div class="nav-group">共通ベース</div>
+    <a class="nav active" data-view="dashboard"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>ダッシュボード</a>
+    <a class="nav" data-view="candidates"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21c0-4 3-6 7-6s7 2 7 6"/></svg>候補者カルテ</a>
+    <a class="nav" data-view="follow"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>自動フォロー</a>
+    <a class="nav" data-view="pr"><svg viewBox="0 0 24 24"><path d="M4 8h4l8-4v16l-8-4H4z"/><path d="M18 9a3 3 0 0 1 0 6"/></svg>採用広報 (SNS)</a>
+    <a class="nav" data-view="analytics"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>分析</a>
+
+    <div class="nav-group">採用機能 <span class="plus">＋採用版</span></div>
+    <a class="nav" data-view="pipeline"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="4" height="16" rx="1"/><rect x="10" y="4" width="4" height="11" rx="1"/><rect x="17" y="4" width="4" height="7" rx="1"/></svg>選考パイプライン<span class="badge">3</span></a>
+    <a class="nav" data-view="schedule"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>面接日程</a>
+    <a class="nav" data-view="pool"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2.5"/><path d="M3 20c0-3 2.5-5 6-5s6 2 6 5M15 20c0-2 1-3.5 3-3.5s3 1.5 3 3.5"/></svg>タレントプール</a>
+    <a class="nav" data-view="media"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18" /><circle cx="12" cy="12" r="9"/></svg>求人媒体連携</a>
+    <a class="nav" data-view="support"><svg viewBox="0 0 24 24"><path d="M18 20a6 6 0 0 0-12 0"/><circle cx="12" cy="8" r="4"/><path d="M20 8l1.5 1.5M4 8L2.5 9.5"/></svg>伴走サポート</a>
+
+    <div class="side-foot">
+      <div class="t">ご契約プラン</div>
+      <div class="p">¥50,000<small> / 月</small></div>
+      <div class="sf-note">採用のプロが伴走。要件設計・スカウト・面接改善まで。</div>
+    </div>
+  </aside>
+
+  <!-- ===== main ===== -->
+  <main class="main">
+    <header class="topbar">
+      <div class="search">🔍 候補者・求人を検索…</div>
+      <div class="tb-right">
+        <span class="tb-dot"><svg class="tb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></span>
+        <div class="avatar">HK</div>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- ===== DASHBOARD ===== -->
+      <section data-panel="dashboard">
+        <div class="ph">
+          <div><h1>ダッシュボード</h1></div>
+          <div class="sub">2026年7月・採用状況サマリー</div>
+          <button class="btn">＋ 候補者を追加</button>
+        </div>
+
+        <div class="grid4" style="margin-bottom:16px">
+          <div class="card kpi"><div class="lb">今月の応募</div><div class="v gt">42</div><div class="d up">▲ 前月比 +12%</div></div>
+          <div class="card kpi"><div class="lb">選考中</div><div class="v gt">18</div><div class="d up">面接フェーズ 7名</div></div>
+          <div class="card kpi"><div class="lb">面接予定</div><div class="v gt">7</div><div class="d up">今週 4件</div></div>
+          <div class="card kpi"><div class="lb">内定</div><div class="v gt">3</div><div class="d up">承諾待ち 2名</div></div>
+        </div>
+
+        <div class="grid2" style="margin-bottom:16px">
+          <div class="card">
+            <div class="card-t">採用ファネル（歩留まり）<span class="more">今月</span></div>
+            <div class="fn-row"><span class="fn-lb">応募</span><div class="fn-track"><div class="fn-bar" style="width:100%">42名 <span class="pct">100%</span></div></div></div>
+            <div class="fn-row"><span class="fn-lb">書類通過</span><div class="fn-track"><div class="fn-bar" style="width:67%">28名 <span class="pct">67%</span></div></div></div>
+            <div class="fn-row"><span class="fn-lb">一次面接</span><div class="fn-track"><div class="fn-bar" style="width:36%">15名 <span class="pct">36%</span></div></div></div>
+            <div class="fn-row"><span class="fn-lb">最終面接</span><div class="fn-track"><div class="fn-bar" style="width:19%">8名 <span class="pct">19%</span></div></div></div>
+            <div class="fn-row"><span class="fn-lb">内定</span><div class="fn-track"><div class="fn-bar" style="width:9%">3名 <span class="pct">7%</span></div></div></div>
+          </div>
+          <div class="card">
+            <div class="card-t">応募数の推移<span class="more">直近6ヶ月</span></div>
+            <div class="bars">
+              <div class="col"><i style="height:42%"></i><small>2月</small></div>
+              <div class="col"><i style="height:55%"></i><small>3月</small></div>
+              <div class="col"><i style="height:48%"></i><small>4月</small></div>
+              <div class="col"><i style="height:70%"></i><small>5月</small></div>
+              <div class="col"><i style="height:62%"></i><small>6月</small></div>
+              <div class="col"><i style="height:92%"></i><small>7月</small></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <div class="card-t">媒体別の応募<span class="more">今月</span></div>
+            <div class="hb"><span class="nm">Indeed</span><span class="tk"><i style="width:95%"></i></span><span class="vl">16</span></div>
+            <div class="hb"><span class="nm">自社サイト</span><span class="tk"><i style="width:60%"></i></span><span class="vl">10</span></div>
+            <div class="hb"><span class="nm">リファラル</span><span class="tk"><i style="width:45%"></i></span><span class="vl">8</span></div>
+            <div class="hb"><span class="nm">Wantedly</span><span class="tk"><i style="width:30%"></i></span><span class="vl">5</span></div>
+            <div class="hb"><span class="nm">その他</span><span class="tk"><i style="width:18%"></i></span><span class="vl">3</span></div>
+          </div>
+          <div class="card">
+            <div class="card-t">今日のやること<span class="more">AIが自動抽出</span></div>
+            <div class="todo"><span class="ico">📅</span><div class="tx"><b>山田 太郎</b>さんの一次面接<br><small>明日 14:00〜／オンライン</small></div><span class="tag b">面接</span></div>
+            <div class="todo"><span class="ico">⚠️</span><div class="tx"><b>3名</b>が書類選考で3日以上停滞<br><small>ワンクリックで自動連絡できます</small></div><span class="tag p">要対応</span></div>
+            <div class="todo"><span class="ico">🎉</span><div class="tx"><b>佐藤 花子</b>さんへ内定通知<br><small>承諾期限まで あと4日</small></div><span class="tag a">内定</span></div>
+            <div class="todo"><span class="ico">🔁</span><div class="tx"><b>タレントプール</b>から5名が再応募対象<br><small>お見送りから3ヶ月経過</small></div><span class="tag grey">再アプローチ</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== PIPELINE ===== -->
+      <section data-panel="pipeline" hidden>
+        <div class="ph">
+          <div><h1>選考パイプライン</h1></div>
+          <div class="sub">エンジニア職・進行中 11名</div>
+          <button class="btn ghost sm">絞り込み ▾</button>
+        </div>
+
+        <div class="hl-banner">
+          ✨ <b>候補者を次のステップへ動かすと、AIが自動でメール連絡。</b>「日程調整が遅れて辞退」を防ぎます。
+          <span class="chip">採用版だけの機能</span>
+        </div>
+
+        <div class="kanban">
+          <div class="kcol">
+            <div class="kcol-h">書類選考 <span class="n">5</span></div>
+            <div class="kcard"><div class="kc-top"><span class="kc-av">田M</span><div><b>田中 美咲</b><small>UIデザイナー</small></div></div><div class="kc-meta"><span class="tag grey">Indeed</span><span class="tag p">停滞3日</span></div><button class="kc-btn" data-toast="田中 美咲さんに書類選考の結果案内を自動送信しました">⚡ 自動連絡する</button></div>
+            <div class="kcard"><div class="kc-top"><span class="kc-av">鈴K</span><div><b>鈴木 健</b><small>バックエンド</small></div></div><div class="kc-meta"><span class="tag grey">自社</span></div><button class="kc-btn" data-toast="鈴木 健さんに書類選考の結果案内を自動送信しました">⚡ 自動連絡する</button></div>
+            <div class="kcard"><div class="kc-top"><span class="kc-av">高R</span><div><b>高橋 涼</b><small>フロント</small></div></div><div class="kc-meta"><span class="tag grey">Wantedly</span></div><button class="kc-btn" data-toast="高橋 涼さんに書類選考の結果案内を自動送信しました">⚡ 自動連絡する</button></div>
+          </div>
+          <div class="kcol">
+            <div class="kcol-h">一次面接 <span class="n">3</span></div>
+            <div class="kcard drag"><div class="kc-top"><span class="kc-av">山T</span><div><b>山田 太郎</b><small>バックエンド</small></div></div><div class="kc-meta"><span class="tag b">明日14:00</span><span class="tag grey">Indeed</span></div><button class="kc-btn" data-toast="山田 太郎さんに一次面接の日程確定メールを自動送信しました">⚡ 自動連絡する</button></div>
+            <div class="kcard"><div class="kc-top"><span class="kc-av">伊A</span><div><b>伊藤 彩</b><small>PM</small></div></div><div class="kc-meta"><span class="tag grey">リファラル</span></div><button class="kc-btn" data-toast="伊藤 彩さんに一次面接の案内を自動送信しました">⚡ 自動連絡する</button></div>
+          </div>
+          <div class="kcol">
+            <div class="kcol-h">最終面接 <span class="n">2</span></div>
+            <div class="kcard"><div class="kc-top"><span class="kc-av">渡M</span><div><b>渡辺 舞</b><small>UIデザイナー</small></div></div><div class="kc-meta"><span class="tag a">来週火</span></div><button class="kc-btn" data-toast="渡辺 舞さんに最終面接の案内を自動送信しました">⚡ 自動連絡する</button></div>
+          </div>
+          <div class="kcol">
+            <div class="kcol-h">内定 <span class="n">1</span></div>
+            <div class="kcard"><div class="kc-top"><span class="kc-av">佐H</span><div><b>佐藤 花子</b><small>フロント</small></div></div><div class="kc-meta"><span class="tag g">承諾待ち</span></div><button class="kc-btn" data-toast="佐藤 花子さんへ内定者フォローメールを自動送信しました">⚡ 内定フォロー</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== CANDIDATE ===== -->
+      <section data-panel="candidates" hidden>
+        <div class="ph"><div><h1>候補者カルテ</h1></div><div class="sub">山田 太郎</div><button class="btn ghost sm">← 一覧へ</button></div>
+        <div class="cand-head">
+          <span class="av">山T</span>
+          <div>
+            <h2>山田 太郎 <span class="tag b" style="vertical-align:middle">一次面接</span></h2>
+            <div class="m">バックエンドエンジニア候補 ・ 応募媒体：Indeed ・ 28歳</div>
+          </div>
+        </div>
+        <div class="cand">
+          <div class="card">
+            <div class="card-t">選考履歴</div>
+            <div class="tl">
+              <div class="tl-i"><b>2026/07/01</b>　応募（Indeed経由）</div>
+              <div class="tl-i"><b>2026/07/02</b>　書類選考 通過・自動お礼メール送信</div>
+              <div class="tl-i"><b>2026/07/03</b>　一次面接の日程調整（自動リマインド送信）</div>
+              <div class="tl-i" style="color:var(--purple)"><b>明日 14:00</b>　一次面接（オンライン）予定</div>
+            </div>
+            <div class="memo">面接官メモ：GitHubのポートフォリオが充実。Go／AWSの実務経験3年。前職はSaaS開発。カルチャーフィット◎。<br>次回：技術課題のレビューを深掘り予定。</div>
+          </div>
+          <div>
+            <div class="card" style="margin-bottom:16px">
+              <div class="card-t">AI適性スコア</div>
+              <div class="score"><span class="n gt">82</span><small>／100（要件マッチ度）</small></div>
+              <div style="font-size:11.5px;color:var(--ink2);margin-top:10px;line-height:1.8">スキル要件 90% ／ 経験年数 85% ／ 志向マッチ 78%</div>
+            </div>
+            <div class="card">
+              <div class="card-t">自動フォロー設定</div>
+              <div class="rowline">面接前日リマインド<span class="switch"></span></div>
+              <div class="rowline">選考結果の自動連絡<span class="switch"></span></div>
+              <div class="rowline">お見送り時にプール登録<span class="switch"></span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== FOLLOW ===== -->
+      <section data-panel="follow" hidden>
+        <div class="ph"><div><h1>自動フォロー</h1></div><div class="sub">辞退を防ぐ・候補者体験を上げる自動化</div><button class="btn">＋ 自動化を追加</button></div>
+        <div class="card" style="margin-bottom:14px">
+          <div class="rowline"><div><b>応募後24時間でお礼メール</b><br><small style="color:var(--muted)">応募のモチベーションが高いうちに第一印象を</small></div><span class="switch"></span></div>
+          <div class="rowline"><div><b>面接 前日リマインド</b><br><small style="color:var(--muted)">無断キャンセル・遅刻を防ぐ</small></div><span class="switch"></span></div>
+          <div class="rowline"><div><b>選考ステップ移動で結果を自動連絡</b><br><small style="color:var(--muted)">「連絡が遅くて辞退」をゼロに</small></div><span class="switch"></span></div>
+          <div class="rowline"><div><b>内定者フォロー（入社まで）</b><br><small style="color:var(--muted)">内定辞退を防ぐナーチャリング</small></div><span class="switch"></span></div>
+          <div class="rowline"><div><b>お見送り者を3ヶ月後に再アプローチ</b><br><small style="color:var(--muted)">タレントプールへ自動登録し再接触</small></div><span class="switch"></span></div>
+        </div>
+        <div class="hl-banner">💡 <b>この自動フォローは、サロン版の「離脱客の掘り起こし」と同じエンジン。</b>採用向けにラベルを替えて活用しています。</div>
+      </section>
+
+      <!-- ===== POOL ===== -->
+      <section data-panel="pool" hidden>
+        <div class="ph"><div><h1>タレントプール</h1></div><div class="sub">過去のお見送り・辞退者を資産化して再アプローチ</div><button class="btn">一括で再アプローチ</button></div>
+        <div class="card">
+          <div class="todo"><span class="kc-av">中Y</span><div class="tx" style="flex:1"><b>中村 唯</b>　フロントエンド<br><small>お見送り 2026/04 ・ 最終面接まで進出</small></div><span class="tag a">再打診 好機</span><button class="btn sm" data-toast="中村 唯さんに再アプローチメールを送信しました" style="margin-left:12px">連絡</button></div>
+          <div class="todo"><span class="kc-av">小R</span><div class="tx" style="flex:1"><b>小林 蓮</b>　PM<br><small>内定辞退 2026/03 ・ 他社決定</small></div><span class="tag grey">3ヶ月経過</span><button class="btn sm" data-toast="小林さんに再アプローチメールを送信しました" style="margin-left:12px">連絡</button></div>
+          <div class="todo"><span class="kc-av">加M</span><div class="tx" style="flex:1"><b>加藤 美優</b>　UIデザイナー<br><small>お見送り 2026/02 ・ スキル高・タイミング不一致</small></div><span class="tag a">再打診 好機</span><button class="btn sm" data-toast="加藤 美優さんに再アプローチメールを送信しました" style="margin-left:12px">連絡</button></div>
+        </div>
+      </section>
+
+      <!-- generic placeholders -->
+      <section data-panel="pr" hidden>
+        <div class="ph"><div><h1>採用広報 (SNS)</h1></div><div class="sub">Instagram・TikTok・X ほかを1画面で</div><button class="btn" data-toast="投稿を予約しました（Instagram・TikTok・X）">＋ 投稿を作成</button></div>
+
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-t">投稿を作成 ＆ 予約<span class="more">複数SNSへ同時投稿</span></div>
+          <div class="plats">
+            <span class="plat on">Instagram</span><span class="plat on">TikTok</span><span class="plat">YouTube</span><span class="plat on">X</span><span class="plat">Threads</span><span class="plat">ブログ</span>
+          </div>
+          <div class="compose"><b>エンジニアの1日に密着してみました👨‍💻｜#社員インタビュー</b><br>「入社の決め手は、面接の速さと雰囲気でした」——実際に働くメンバーの声を公開中。#エンジニア採用 #中途採用 …</div>
+          <div class="compose-act"><span class="imgs"><i></i><i></i><i></i></span><button class="btn sm" data-toast="投稿を予約しました（Instagram・TikTok・X）">予約投稿</button></div>
+        </div>
+
+        <div class="grid4" style="margin-bottom:16px">
+          <div class="card kpi"><div class="lb">総リーチ</div><div class="v gt">219,803</div><div class="d up">▲ +18%</div></div>
+          <div class="card kpi"><div class="lb">反応（いいね等）</div><div class="v gt">2,595</div><div class="d up">▲ +9%</div></div>
+          <div class="card kpi"><div class="lb">投稿数</div><div class="v gt">58</div><div class="d up">今月 12件</div></div>
+          <div class="card kpi"><div class="lb">広報 → 応募</div><div class="v gt">12</div><div class="d up">SNS経由の応募</div></div>
+        </div>
+
+        <div class="grid2" style="margin-bottom:16px">
+          <div class="card">
+            <div class="card-t">投稿別リーチの推移<span class="more">直近7投稿</span></div>
+            <div class="bars">
+              <div class="col"><i style="height:40%"></i><small>7/1</small></div>
+              <div class="col"><i style="height:62%"></i><small>7/4</small></div>
+              <div class="col"><i style="height:48%"></i><small>7/7</small></div>
+              <div class="col"><i style="height:82%"></i><small>7/10</small></div>
+              <div class="col"><i style="height:70%"></i><small>7/13</small></div>
+              <div class="col"><i style="height:95%"></i><small>7/16</small></div>
+              <div class="col"><i style="height:66%"></i><small>7/19</small></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-t">プラットフォーム別リーチ<span class="more">今月</span></div>
+            <div class="dwrap">
+              <div class="donut"></div>
+              <div class="dlegend">
+                <span style="--c:var(--purple)">Instagram　44%</span>
+                <span style="--c:var(--pink)">TikTok　26%</span>
+                <span style="--c:var(--amber)">X　18%</span>
+                <span style="--c:var(--blue)">その他　12%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <div class="card-t">反応の多い投稿 Top3<span class="more">保存・リーチ順</span></div>
+            <div class="rank">
+              <div class="rk"><span class="no">1</span><span class="nm">エンジニアの1日に密着<small>#社員インタビュー</small></span><span class="vl">41,648</span></div>
+              <div class="rk"><span class="no">2</span><span class="nm">未経験から半年で活躍するまで<small>#成長ストーリー</small></span><span class="vl">18,204</span></div>
+              <div class="rk"><span class="no">3</span><span class="nm">オフィス紹介＆福利厚生まとめ<small>#働く環境</small></span><span class="vl">14,569</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-t">AIからの企画提案<span class="more">次に伸びる投稿</span></div>
+            <div class="todo"><span class="ico">💡</span><div class="tx"><b>「面接官のホンネ」座談会</b><br><small>#候補者の不安 は保存されやすい傾向</small></div><span class="tag p">おすすめ</span></div>
+            <div class="todo"><span class="ico">💡</span><div class="tx"><b>入社1年目の1週間ルーティン</b><br><small>密着系は応募導線が強い</small></div><span class="tag b">高CV見込</span></div>
+            <div class="todo"><span class="ico">💡</span><div class="tx"><b>福利厚生を数字で紹介</b><br><small>保存・シェアされやすい</small></div><span class="tag grey">安定</span></div>
+          </div>
+        </div>
+      </section>
+      <section data-panel="analytics" hidden><div class="placeholder"><div class="pi">📊</div><h3>分析</h3><p>採用ファネル・媒体別ROI・選考期間などを自動で可視化する画面です。</p></div></section>
+      <section data-panel="schedule" hidden><div class="placeholder"><div class="pi">📅</div><h3>面接日程の自動調整</h3><p>候補者と面接官のカレンダーを連携し、空き枠から自動で日程を確定。<br>調整メールも自動送信します。</p></div></section>
+      <section data-panel="media" hidden><div class="placeholder"><div class="pi">🔗</div><h3>求人媒体連携</h3><p>Indeed・各求人媒体からの応募を一元管理。媒体ごとの費用対効果も自動集計します。</p></div></section>
+      <section data-panel="support" hidden><div class="placeholder"><div class="pi">🤝</div><h3>伴走サポート（¥50,000プランの核）</h3><p>採用のプロが並走。要件設計・スカウト文面レビュー・母集団形成の戦略・面接改善・月次のKPI振り返りまで。<br>必要に応じてスカウト代行や面接同席も。</p></div></section>
+
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"><span class="ck">✓</span><span id="toast-msg"></span></div>
+
+<script>
+  const navs = document.querySelectorAll('.nav');
+  const panels = document.querySelectorAll('[data-panel]');
+  navs.forEach(n=>n.addEventListener('click',()=>{
+    navs.forEach(x=>x.classList.remove('active'));
+    n.classList.add('active');
+    const v = n.dataset.view;
+    panels.forEach(p=>p.hidden = (p.dataset.panel !== v));
+    document.querySelector('.content').scrollTo(0,0);
+    window.scrollTo(0,0);
+  }));
+
+  // toast demo (auto-contact buttons)
+  const toast = document.getElementById('toast'), tmsg = document.getElementById('toast-msg');
+  let tt;
+  document.querySelectorAll('[data-toast]').forEach(b=>b.addEventListener('click',()=>{
+    tmsg.textContent = b.dataset.toast;
+    toast.classList.add('show');
+    clearTimeout(tt); tt=setTimeout(()=>toast.classList.remove('show'),2600);
+  }));
+
+  // toggle switches
+  document.querySelectorAll('.switch').forEach(s=>s.addEventListener('click',()=>s.classList.toggle('off')));
+  // platform chips
+  document.querySelectorAll('.plat').forEach(p=>p.addEventListener('click',()=>p.classList.toggle('on')));
+</script>
+
+</body>
+</html>
